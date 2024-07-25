@@ -1,0 +1,2 @@
+class_name PocketZone
+extends Area3D

@@ -1,0 +1,153 @@
+[gd_scene load_steps=5 format=3 uid="uid://45wt27srvffx"]
+
+[ext_resource type="Script" path="res://Scripts/HUDController.gd" id="1_q15wx"]
+[ext_resource type="LabelSettings" uid="uid://c0jstdr536nwx" path="res://Various_Settings/Jersey15LabelFontSettings.tres" id="1_xdvex"]
+[ext_resource type="Texture2D" uid="uid://k7qvuproskfs" path="res://Materials/UnderlayOxyBar.png" id="3_akhg7"]
+[ext_resource type="Texture2D" uid="uid://cbfqkgt38ptu3" path="res://Materials/OverlayOxyBar.png" id="3_d2knx"]
+
+[node name="HUD" type="Control"]
+top_level = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_q15wx")
+
+[node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Top" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Mc" type="MarginContainer" parent="Main/Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="InfoBox" type="VBoxContainer" parent="Main/Top/Mc"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+alignment = 1
+
+[node name="DepthBox" type="HBoxContainer" parent="Main/Top/Mc/InfoBox"]
+layout_mode = 2
+
+[node name="DepthLabel" type="Label" parent="Main/Top/Mc/InfoBox/DepthBox"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "[ Depth: "
+label_settings = ExtResource("1_xdvex")
+
+[node name="Depth" type="Label" parent="Main/Top/Mc/InfoBox/DepthBox"]
+layout_mode = 2
+text = "Not Available"
+label_settings = ExtResource("1_xdvex")
+
+[node name="CoordBox" type="HBoxContainer" parent="Main/Top/Mc/InfoBox"]
+layout_mode = 2
+
+[node name="CoordLabel" type="Label" parent="Main/Top/Mc/InfoBox/CoordBox"]
+layout_mode = 2
+text = "[ X, Z: "
+label_settings = ExtResource("1_xdvex")
+
+[node name="XCoords" type="Label" parent="Main/Top/Mc/InfoBox/CoordBox"]
+layout_mode = 2
+text = "xbounds"
+label_settings = ExtResource("1_xdvex")
+
+[node name="ZCoords" type="Label" parent="Main/Top/Mc/InfoBox/CoordBox"]
+layout_mode = 2
+text = "zbounds"
+label_settings = ExtResource("1_xdvex")
+
+[node name="HRegionBox" type="HBoxContainer" parent="Main/Top/Mc/InfoBox"]
+layout_mode = 2
+
+[node name="HRegionLabel" type="Label" parent="Main/Top/Mc/InfoBox/HRegionBox"]
+layout_mode = 2
+text = "[ H-Region: "
+label_settings = ExtResource("1_xdvex")
+
+[node name="HRegion" type="Label" parent="Main/Top/Mc/InfoBox/HRegionBox"]
+layout_mode = 2
+text = "Standard"
+label_settings = ExtResource("1_xdvex")
+
+[node name="VRegionBox" type="HBoxContainer" parent="Main/Top/Mc/InfoBox"]
+layout_mode = 2
+
+[node name="VRegionLabel" type="Label" parent="Main/Top/Mc/InfoBox/VRegionBox"]
+layout_mode = 2
+text = "[ V-Region: "
+label_settings = ExtResource("1_xdvex")
+
+[node name="VRegion" type="Label" parent="Main/Top/Mc/InfoBox/VRegionBox"]
+layout_mode = 2
+text = "Standard"
+label_settings = ExtResource("1_xdvex")
+
+[node name="Bottom" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.15
+
+[node name="StatusBarBox" type="MarginContainer" parent="Main/Bottom"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.35
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 10
+
+[node name="Vb" type="VBoxContainer" parent="Main/Bottom/StatusBarBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CorruptionBar" type="TextureProgressBar" parent="Main/Bottom/StatusBarBox/Vb"]
+layout_mode = 2
+size_flags_vertical = 3
+allow_lesser = true
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Main/Bottom/StatusBarBox/Vb"]
+layout_mode = 2
+
+[node name="AirBar" type="TextureProgressBar" parent="Main/Bottom/StatusBarBox/Vb"]
+texture_filter = 3
+texture_repeat = 1
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+step = -0.01
+value = 100.0
+nine_patch_stretch = true
+texture_under = ExtResource("3_d2knx")
+texture_progress = ExtResource("3_akhg7")
+
+[node name="HotbarBox" type="HBoxContainer" parent="Main/Bottom"]
+layout_direction = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+alignment = 1
+
+[node name="StatusWarningBox" type="HBoxContainer" parent="Main/Bottom"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.35

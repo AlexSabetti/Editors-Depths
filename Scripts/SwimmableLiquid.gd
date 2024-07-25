@@ -1,0 +1,2 @@
+class_name SwimmableLiquid
+extends Area3D

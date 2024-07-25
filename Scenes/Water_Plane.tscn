@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cp5f5owd0x1dr"]
+
+[ext_resource type="Material" uid="uid://cuw5vbq4gdi41" path="res://Materials/Water_Material.tres" id="1_udsbk"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_crkv1"]
+size = Vector2(10, 10)
+subdivide_width = 200
+subdivide_depth = 200
+orientation = 1
+
+[node name="Node3D" type="MeshInstance3D"]
+mesh = SubResource("QuadMesh_crkv1")
+surface_material_override/0 = ExtResource("1_udsbk")

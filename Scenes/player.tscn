@@ -1,0 +1,137 @@
+[gd_scene load_steps=15 format=3 uid="uid://4b87ljefy1vi"]
+
+[ext_resource type="Script" path="res://Scripts/PlayerMovementController.gd" id="1_7flee"]
+[ext_resource type="PackedScene" uid="uid://45wt27srvffx" path="res://Scenes/hud.tscn" id="1_ddqv8"]
+[ext_resource type="Shader" path="res://Scenes/UnderwaterShader.gdshader" id="3_6ugvo"]
+[ext_resource type="Shader" path="res://Scenes/DamageShader.gdshader" id="3_j5b5y"]
+[ext_resource type="Script" path="res://Scripts/SwimControl.gd" id="3_mm2hk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rijtm"]
+render_priority = 0
+shader = ExtResource("3_6ugvo")
+shader_parameter/tint = Color(0.27451, 0.498039, 1, 0.380392)
+shader_parameter/wave_speed = 1.0
+shader_parameter/wave_freq = 10.0
+shader_parameter/wave_width = 1.0
+shader_parameter/blur = 1.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_rssvr"]
+material = SubResource("ShaderMaterial_rijtm")
+size = Vector2(1, 1)
+orientation = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_02jnr"]
+render_priority = 0
+shader = ExtResource("3_j5b5y")
+shader_parameter/tint = Color(1, 0, 0, 0.360784)
+shader_parameter/blur = 2.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_g2as0"]
+material = SubResource("ShaderMaterial_02jnr")
+size = Vector2(1, 1)
+orientation = 2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ya312"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_px2yg"]
+radius = 0.1
+
+[sub_resource type="Animation" id="Animation_h5hgf"]
+resource_name = "drowning"
+
+[sub_resource type="Animation" id="Animation_md42b"]
+resource_name = "start_up"
+length = 10.0
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pivot/Eyes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, -0.973214, -0.501663, 3.5, 1, 0, -0.973214, -0.501663, 4, 1, 0, -0.604687, -0.501663, 4.1, 1, 0, -0.637356, -0.501663, 4.7, 1, 0, -0.637356, -0.501663, 6.2, 1, 0, -0.259242, -0.501663, 7.5, 1, 0, -0.259242, -0.501663, 8.2, 1, 0, -0.133516, -0.501663, 8.5, 1, 0, -0.133516, -0.501663, 9, 1, 0, 0, 0, 10, 1, 0, 0, 0)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Pivot/Eyes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, -0.290711, 0, 0, 0.956811, 0.3, 1, -0.289135, -0.0994908, -0.0302286, 0.951624, 0.7, 1, -0.289135, -0.0994908, -0.0302286, 0.951624, 1.2, 1, -0.28805, 0.129143, 0.0392378, 0.948056, 1.8, 1, -0.28805, 0.129143, 0.0392378, 0.948056, 2.2, 1, -0.290702, 0, 0, 0.956814, 5.5, 1, -0.290702, 0, 0, 0.956814, 7.8, 1, -0.0557518, 0, 0, 0.998445, 8.2, 1, -0.0557518, 0, 0, 0.998445, 9, 1, 0, 0, 0, 1, 10, 1, 0, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_18g2r"]
+_data = {
+"drowning": SubResource("Animation_h5hgf"),
+"start_up": SubResource("Animation_md42b")
+}
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_7flee")
+move_forward = "forwards"
+move_backward = "backwards"
+move_left = "left"
+move_right = "right"
+jump = "jump"
+hotbar_up = "scroll_down"
+hotbar_down = "scroll_up"
+left_click_use = "interact_left"
+right_click_use = "interact_right"
+mouse_sens = 0.1
+base_swim_speed = 23.0
+
+[node name="Pivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Eyes" type="Camera3D" parent="Pivot"]
+
+[node name="HUD" parent="Pivot/Eyes" instance=ExtResource("1_ddqv8")]
+metadata/_edit_use_anchors_ = true
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Pivot/Eyes"]
+light_energy = 8.518
+light_volumetric_fog_energy = 0.718
+light_specular = 0.0
+light_cull_mask = 4294967279
+distance_fade_begin = 15.0
+distance_fade_length = 50.0
+spot_range = 99.279
+spot_angle = 26.73
+
+[node name="LiquidOverlay" type="MeshInstance3D" parent="Pivot/Eyes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.174916)
+layers = 16
+mesh = SubResource("PlaneMesh_rssvr")
+
+[node name="DamageOverlay" type="MeshInstance3D" parent="Pivot/Eyes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.173)
+visible = false
+layers = 16
+mesh = SubResource("PlaneMesh_g2as0")
+
+[node name="RayCast3D" type="RayCast3D" parent="Pivot/Eyes"]
+target_position = Vector3(0, 0, -3.5)
+collision_mask = 8
+collide_with_areas = true
+
+[node name="BodyModel" type="MeshInstance3D" parent="Pivot"]
+skeleton = NodePath("../..")
+
+[node name="BodyCollider" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_ya312")
+
+[node name="LiquidNotifier" type="Node3D" parent="."]
+script = ExtResource("3_mm2hk")
+
+[node name="DepthDetector" type="RayCast3D" parent="LiquidNotifier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, -2, 0)
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="DepthCheck" type="Area3D" parent="LiquidNotifier"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LiquidNotifier/DepthCheck"]
+shape = SubResource("CylinderShape3D_px2yg")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_18g2r")
+}

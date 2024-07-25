@@ -1,0 +1,152 @@
+[gd_scene load_steps=16 format=3 uid="uid://cvritgkii66k0"]
+
+[ext_resource type="Shader" path="res://Scenes/SkyShader.gdshader" id="1_uryen"]
+[ext_resource type="Script" path="res://Scripts/UniqueRegion.gd" id="2_4f48e"]
+[ext_resource type="Script" path="res://Scripts/SwimmableLiquid.gd" id="2_61l5r"]
+[ext_resource type="Script" path="res://Scripts/PocketZone.gd" id="3_3pbjl"]
+[ext_resource type="PackedScene" uid="uid://cp5f5owd0x1dr" path="res://Scenes/Water_Plane.tscn" id="3_3113r"]
+[ext_resource type="PackedScene" uid="uid://brtxj5xwycjey" path="res://ocean_floor.tscn" id="4_mcbu3"]
+[ext_resource type="PackedScene" uid="uid://4b87ljefy1vi" path="res://Scenes/player.tscn" id="4_veqn2"]
+[ext_resource type="PackedScene" uid="uid://dhah5cvncq7qi" path="res://static_portal.tscn" id="8_14c46"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ek3yl"]
+shader = ExtResource("1_uryen")
+shader_parameter/sky_color = null
+
+[sub_resource type="Sky" id="Sky_oqj73"]
+sky_material = SubResource("ShaderMaterial_ek3yl")
+
+[sub_resource type="Environment" id="Environment_v1nbp"]
+sky = SubResource("Sky_oqj73")
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.01
+volumetric_fog_density = 0.2575
+volumetric_fog_albedo = Color(0, 0, 0, 1)
+volumetric_fog_anisotropy = 0.11
+volumetric_fog_length = 10.42
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tpimw"]
+size = Vector3(2000, 498, 2000)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bsst7"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4wfuq"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rw6wu"]
+size = Vector3(100, 50, 100)
+
+[node name="WorldNode" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_v1nbp")
+
+[node name="VoidOceanNode" type="Node3D" parent="."]
+
+[node name="VoidOcean" type="Area3D" parent="VoidOceanNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -200, 0)
+script = ExtResource("2_61l5r")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VoidOceanNode/VoidOcean"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 173.829, 0)
+shape = SubResource("BoxShape3D_tpimw")
+
+[node name="Node3D" parent="VoidOceanNode/VoidOcean" instance=ExtResource("3_3113r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.113939, 200, 8.6918)
+
+[node name="Node3D2" parent="VoidOceanNode/VoidOcean" instance=ExtResource("3_3113r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.113939, 200, -1.3082)
+
+[node name="Node3D5" parent="VoidOceanNode/VoidOcean" instance=ExtResource("3_3113r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.88606, 200, 8.6918)
+
+[node name="Node3D6" parent="VoidOceanNode/VoidOcean" instance=ExtResource("3_3113r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.88606, 200, -1.3082)
+
+[node name="Node3D3" parent="VoidOceanNode/VoidOcean" instance=ExtResource("3_3113r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.1139, 200, 8.6918)
+
+[node name="Node3D4" parent="VoidOceanNode/VoidOcean" instance=ExtResource("3_3113r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.1139, 200, -1.3082)
+
+[node name="Node3D7" parent="VoidOceanNode/VoidOcean" instance=ExtResource("3_3113r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.113939, 200, -11.3082)
+
+[node name="Node3D8" parent="VoidOceanNode/VoidOcean" instance=ExtResource("3_3113r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.88606, 200, -11.3082)
+
+[node name="Node3D9" parent="VoidOceanNode/VoidOcean" instance=ExtResource("3_3113r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.1139, 200, -11.3082)
+
+[node name="OceanFloor" parent="VoidOceanNode" instance=ExtResource("4_mcbu3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -70.148, 0)
+
+[node name="PocketNodes" type="Node3D" parent="."]
+
+[node name="Standard" type="Node3D" parent="PocketNodes"]
+
+[node name="Ground" type="StaticBody3D" parent="PocketNodes/Standard"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PocketNodes/Standard/Ground"]
+shape = SubResource("BoxShape3D_bsst7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PocketNodes/Standard/Ground"]
+mesh = SubResource("BoxMesh_4wfuq")
+
+[node name="LocalArea" type="Area3D" parent="PocketNodes/Standard"]
+script = ExtResource("3_3pbjl")
+
+[node name="Region" type="CollisionShape3D" parent="PocketNodes/Standard/LocalArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 25, 0)
+shape = SubResource("BoxShape3D_rw6wu")
+
+[node name="TitleArea" type="Area3D" parent="PocketNodes/Standard"]
+script = ExtResource("2_4f48e")
+
+[node name="Region" type="CollisionShape3D" parent="PocketNodes/Standard/TitleArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 25, 0)
+shape = SubResource("BoxShape3D_rw6wu")
+
+[node name="Player" parent="." instance=ExtResource("4_veqn2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 507.135, -1.73362)
+fall_damage_modifier = 0.38
+play_startup_anim = false
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 24.4948, 0)
+light_energy = 4.424
+light_volumetric_fog_energy = 10.0
+light_size = 1.0
+light_specular = 3.232
+spot_range = 31.045
+spot_attenuation = 0.5
+spot_angle = 15.7
+spot_angle_attenuation = 2.0
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SpotLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24.4948, -4.13039)
+light_energy = 4.424
+light_volumetric_fog_energy = 10.0
+light_size = 1.0
+light_specular = 3.232
+spot_range = 31.045
+spot_attenuation = 0.5
+spot_angle = 13.0494
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.87979, -0.475363, 0, 0.475363, 0.87979, 0, 449.095, 0)
+sky_mode = 2
+
+[node name="StaticPortal" parent="." instance=ExtResource("8_14c46")]
+transform = Transform3D(0.947, 0, 0, 0, 3, 0, 0, 0, 19.8183, -50, 2, 0)
+visible = false
+set_id = 1
+exit_offset = Vector3(2, 0, 0)
+
+[node name="StaticPortal2" parent="." instance=ExtResource("8_14c46")]
+transform = Transform3D(0.947, 0, 0, 0, 3, 0, 0, 0, 19.8183, 50, 2, 0)
+visible = false
+unique_portal_id = 1
+set_id = 1
+exit_offset = Vector3(-2, 0, 0)

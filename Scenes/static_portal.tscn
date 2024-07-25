@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://dhah5cvncq7qi"]
+
+[ext_resource type="Script" path="res://Scripts/Portal.gd" id="1_pb0ho"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_52d1e"]
+size = Vector3(0.3, 5.1, 5.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tm3ll"]
+size = Vector3(0.2, 5, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_71vke"]
+size = Vector3(0.31, 5.11, 5.11)
+
+[node name="StaticPortal" type="Node3D" node_paths=PackedStringArray("portal_area", "interact_area")]
+script = ExtResource("1_pb0ho")
+portal_area = NodePath("PortalArea")
+interact_area = NodePath("InteractArea")
+
+[node name="InteractArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+shape = SubResource("BoxShape3D_52d1e")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="InteractArea"]
+mesh = SubResource("BoxMesh_tm3ll")
+
+[node name="PortalArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PortalArea"]
+shape = SubResource("BoxShape3D_71vke")
+
+[connection signal="body_entered" from="InteractArea" to="." method="teleporter_collided"]
+[connection signal="body_entered" from="PortalArea" to="." method="approached_zone"]
+[connection signal="body_exited" from="PortalArea" to="." method="left_zone"]
