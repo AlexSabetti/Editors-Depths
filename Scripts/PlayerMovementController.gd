@@ -97,14 +97,17 @@ extends CharacterBody3D
 @export var starting_item_slot_6:Item = null
 @export var gas_tank_slot:GasTankItem = GasTankItem.new(1, 1000.0, 0, 0)
 
-var inventory: Array[Item]
+var inventory: Array[Item] = [null, null, null, null, null, null, null]
 var hover_on_slot:int = 0
 var currently_holding:Item
 #Technically this makes it so the length is 7
 var max_inv_hotbar_pos:int = 6 
 #If we're using an item we don't want to be able to switch off of it, so we have this toggle here
 var can_scroll_hotbar: bool = true
+## Specifies if we have a tank connected for external air or not
 var has_connected_tank:bool
+## Specifies whether or not we deplete air from our lungs or the external tank
+var drawing_from_mask:bool = false
 
 
 
@@ -244,21 +247,29 @@ func handle_changing():
 
 
 func handle_hotbar():
+	var prev_hover_on_slot = hover_on_slot
 	#Scrolling down should move the highlighted slot updwards (ie. to the right)
 	if Input.is_action_just_pressed(hotbar_up) and !changing_held_item:
 		changing_held_item = true
 		if hover_on_slot >= max_inv_hotbar_pos:
+			hud.highlight_hover_slot(max_inv_hotbar_pos, 0)
 			hover_on_slot = 0
 		else: 
+			hud.highlight_hover_slot(hover_on_slot, hover_on_slot + 1)
 			hover_on_slot += 1
 	#Scrolling up should move the highlighted slot downwards (ie. to the left)
 	if Input.is_action_just_pressed(hotbar_down) and !changing_held_item:
 		changing_held_item = true
 		if hover_on_slot <= 0:
+			hud.highlight_hover_slot(0, max_inv_hotbar_pos)
 			hover_on_slot = max_inv_hotbar_pos
 		else:
+			hud.highlight_hover_slot(hover_on_slot, hover_on_slot - 1)
 			hover_on_slot -= 1
-			
+	if prev_hover_on_slot != hover_on_slot:
+		print("Switched to: {0}".format([hover_on_slot]))
+		if inventory[prev_hover_on_slot] == null and inventory[hover_on_slot] == null:
+			changing_held_item = false
 	if Input.is_action_pressed(left_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
 		inventory[hover_on_slot].use(self)
 	if Input.is_action_pressed(right_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
@@ -304,7 +315,7 @@ func _ready():
 	inventory[5] = starting_item_slot_5
 	inventory[6] = starting_item_slot_6
 	currently_holding = inventory[0]
-
+	hud.highlight_hover_slot(0,0)
 	print_debug("Player Ready")
 	if play_startup_anim:
 		anim_manager.play("start_up")

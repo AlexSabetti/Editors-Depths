@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://45wt27srvffx"]
+[gd_scene load_steps=8 format=3 uid="uid://45wt27srvffx"]
 
 [ext_resource type="Script" path="res://Scripts/HUDController.gd" id="1_q15wx"]
 [ext_resource type="LabelSettings" uid="uid://c0jstdr536nwx" path="res://Various_Settings/Jersey15LabelFontSettings.tres" id="1_xdvex"]
 [ext_resource type="Texture2D" uid="uid://k7qvuproskfs" path="res://Materials/UnderlayOxyBar.png" id="3_akhg7"]
 [ext_resource type="Texture2D" uid="uid://cbfqkgt38ptu3" path="res://Materials/OverlayOxyBar.png" id="3_d2knx"]
+[ext_resource type="Texture2D" uid="uid://cowxd8grqmkjv" path="res://Materials/UnderlayCorBar.png" id="3_q8ame"]
+[ext_resource type="Texture2D" uid="uid://dfauqlgkfpept" path="res://Materials/OverlayCorBar.png" id="4_ac5ne"]
+[ext_resource type="Texture2D" uid="uid://bedqrhnihatkq" path="res://Materials/HotbarSlotAttempt1.png" id="7_klwjv"]
 
 [node name="HUD" type="Control"]
 top_level = true
@@ -16,98 +19,97 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_q15wx")
 
-[node name="Main" type="VBoxContainer" parent="."]
+[node name="MC" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
 
-[node name="Top" type="HBoxContainer" parent="Main"]
+[node name="Main" type="VBoxContainer" parent="MC"]
+layout_mode = 2
+
+[node name="Top" type="HBoxContainer" parent="MC/Main"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Mc" type="MarginContainer" parent="Main/Top"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="InfoBox" type="VBoxContainer" parent="Main/Top/Mc"]
+[node name="InfoBox" type="VBoxContainer" parent="MC/Main/Top"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 alignment = 1
 
-[node name="DepthBox" type="HBoxContainer" parent="Main/Top/Mc/InfoBox"]
+[node name="DepthBox" type="HBoxContainer" parent="MC/Main/Top/InfoBox"]
 layout_mode = 2
 
-[node name="DepthLabel" type="Label" parent="Main/Top/Mc/InfoBox/DepthBox"]
+[node name="DepthLabel" type="Label" parent="MC/Main/Top/InfoBox/DepthBox"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "[ Depth: "
 label_settings = ExtResource("1_xdvex")
 
-[node name="Depth" type="Label" parent="Main/Top/Mc/InfoBox/DepthBox"]
+[node name="Depth" type="Label" parent="MC/Main/Top/InfoBox/DepthBox"]
 layout_mode = 2
 text = "Not Available"
 label_settings = ExtResource("1_xdvex")
 
-[node name="CoordBox" type="HBoxContainer" parent="Main/Top/Mc/InfoBox"]
+[node name="CoordBox" type="HBoxContainer" parent="MC/Main/Top/InfoBox"]
 layout_mode = 2
 
-[node name="CoordLabel" type="Label" parent="Main/Top/Mc/InfoBox/CoordBox"]
+[node name="CoordLabel" type="Label" parent="MC/Main/Top/InfoBox/CoordBox"]
 layout_mode = 2
 text = "[ X, Z: "
 label_settings = ExtResource("1_xdvex")
 
-[node name="XCoords" type="Label" parent="Main/Top/Mc/InfoBox/CoordBox"]
+[node name="XCoords" type="Label" parent="MC/Main/Top/InfoBox/CoordBox"]
 layout_mode = 2
 text = "xbounds"
 label_settings = ExtResource("1_xdvex")
 
-[node name="ZCoords" type="Label" parent="Main/Top/Mc/InfoBox/CoordBox"]
+[node name="ZCoords" type="Label" parent="MC/Main/Top/InfoBox/CoordBox"]
 layout_mode = 2
 text = "zbounds"
 label_settings = ExtResource("1_xdvex")
 
-[node name="HRegionBox" type="HBoxContainer" parent="Main/Top/Mc/InfoBox"]
+[node name="HRegionBox" type="HBoxContainer" parent="MC/Main/Top/InfoBox"]
 layout_mode = 2
 
-[node name="HRegionLabel" type="Label" parent="Main/Top/Mc/InfoBox/HRegionBox"]
+[node name="HRegionLabel" type="Label" parent="MC/Main/Top/InfoBox/HRegionBox"]
 layout_mode = 2
 text = "[ H-Region: "
 label_settings = ExtResource("1_xdvex")
 
-[node name="HRegion" type="Label" parent="Main/Top/Mc/InfoBox/HRegionBox"]
+[node name="HRegion" type="Label" parent="MC/Main/Top/InfoBox/HRegionBox"]
 layout_mode = 2
 text = "Standard"
 label_settings = ExtResource("1_xdvex")
 
-[node name="VRegionBox" type="HBoxContainer" parent="Main/Top/Mc/InfoBox"]
+[node name="VRegionBox" type="HBoxContainer" parent="MC/Main/Top/InfoBox"]
 layout_mode = 2
 
-[node name="VRegionLabel" type="Label" parent="Main/Top/Mc/InfoBox/VRegionBox"]
+[node name="VRegionLabel" type="Label" parent="MC/Main/Top/InfoBox/VRegionBox"]
 layout_mode = 2
 text = "[ V-Region: "
 label_settings = ExtResource("1_xdvex")
 
-[node name="VRegion" type="Label" parent="Main/Top/Mc/InfoBox/VRegionBox"]
+[node name="VRegion" type="Label" parent="MC/Main/Top/InfoBox/VRegionBox"]
 layout_mode = 2
 text = "Standard"
 label_settings = ExtResource("1_xdvex")
 
-[node name="Bottom" type="HBoxContainer" parent="Main"]
+[node name="Bottom" type="HBoxContainer" parent="MC/Main"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.15
 
-[node name="StatusBarBox" type="MarginContainer" parent="Main/Bottom"]
+[node name="StatusBarBox" type="MarginContainer" parent="MC/Main/Bottom"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.35
@@ -116,23 +118,30 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 10
 
-[node name="Vb" type="VBoxContainer" parent="Main/Bottom/StatusBarBox"]
+[node name="Vb" type="VBoxContainer" parent="MC/Main/Bottom/StatusBarBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
+alignment = 1
 
-[node name="CorruptionBar" type="TextureProgressBar" parent="Main/Bottom/StatusBarBox/Vb"]
+[node name="CorruptionBar" type="TextureProgressBar" parent="MC/Main/Bottom/StatusBarBox/Vb"]
+visible = false
+custom_minimum_size = Vector2(200, 14)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 0
+size_flags_vertical = 0
+step = 0.01
 allow_lesser = true
+nine_patch_stretch = true
+texture_under = ExtResource("3_q8ame")
+texture_progress = ExtResource("4_ac5ne")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Main/Bottom/StatusBarBox/Vb"]
-layout_mode = 2
-
-[node name="AirBar" type="TextureProgressBar" parent="Main/Bottom/StatusBarBox/Vb"]
+[node name="AirBar" type="TextureProgressBar" parent="MC/Main/Bottom/StatusBarBox/Vb"]
 texture_filter = 3
 texture_repeat = 1
+custom_minimum_size = Vector2(200, 14)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 0
+size_flags_vertical = 0
 size_flags_stretch_ratio = 0.4
 step = -0.01
 value = 100.0
@@ -140,14 +149,140 @@ nine_patch_stretch = true
 texture_under = ExtResource("3_d2knx")
 texture_progress = ExtResource("3_akhg7")
 
-[node name="HotbarBox" type="HBoxContainer" parent="Main/Bottom"]
-layout_direction = 1
+[node name="HotbarBox" type="GridContainer" parent="MC/Main/Bottom"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.3
-alignment = 1
+size_flags_horizontal = 0
+size_flags_vertical = 0
+size_flags_stretch_ratio = 0.7
+columns = 7
 
-[node name="StatusWarningBox" type="HBoxContainer" parent="Main/Bottom"]
+[node name="Slot0" type="TextureRect" parent="MC/Main/Bottom/HotbarBox"]
+layout_mode = 2
+texture = ExtResource("7_klwjv")
+
+[node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot0"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot1" type="TextureRect" parent="MC/Main/Bottom/HotbarBox"]
+layout_mode = 2
+texture = ExtResource("7_klwjv")
+
+[node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot2" type="TextureRect" parent="MC/Main/Bottom/HotbarBox"]
+layout_mode = 2
+texture = ExtResource("7_klwjv")
+
+[node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot3" type="TextureRect" parent="MC/Main/Bottom/HotbarBox"]
+layout_mode = 2
+texture = ExtResource("7_klwjv")
+
+[node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot4" type="TextureRect" parent="MC/Main/Bottom/HotbarBox"]
+layout_mode = 2
+texture = ExtResource("7_klwjv")
+
+[node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot5" type="TextureRect" parent="MC/Main/Bottom/HotbarBox"]
+layout_mode = 2
+texture = ExtResource("7_klwjv")
+
+[node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot5"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot6" type="TextureRect" parent="MC/Main/Bottom/HotbarBox"]
+layout_mode = 2
+texture = ExtResource("7_klwjv")
+
+[node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot6"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StatusWarningBox" type="GridContainer" parent="MC/Main/Bottom"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.35
