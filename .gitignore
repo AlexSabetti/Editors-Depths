@@ -1,4 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
 addons/
-
+Models/
+Materials/
+Resources/
+.vscode/
+Terrain/
+project.godot
