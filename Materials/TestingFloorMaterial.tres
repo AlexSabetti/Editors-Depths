@@ -1,7 +1,0 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://ccu6ku8u0q3ei"]
-
-[ext_resource type="Texture2D" uid="uid://8do6lohhodub" path="res://Materials/TestFloorPattern.png" id="1_5wwa4"]
-
-[resource]
-albedo_texture = ExtResource("1_5wwa4")
-uv1_triplanar = true
