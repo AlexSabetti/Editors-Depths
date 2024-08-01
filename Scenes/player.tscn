@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" path="res://Scripts/PlayerMovementController.gd" id="1_7flee"]
 [ext_resource type="PackedScene" uid="uid://45wt27srvffx" path="res://Scenes/hud.tscn" id="1_ddqv8"]
-[ext_resource type="Shader" path="res://Scenes/UnderwaterShader.gdshader" id="3_6ugvo"]
-[ext_resource type="Shader" path="res://Scenes/DamageShader.gdshader" id="3_j5b5y"]
 [ext_resource type="Script" path="res://Scripts/SwimControl.gd" id="3_mm2hk"]
+[ext_resource type="Shader" path="res://Shaders/UnderwaterShader.gdshader" id="3_nlh5h"]
+[ext_resource type="Shader" path="res://Shaders/DamageShader.gdshader" id="4_bxq3q"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rijtm"]
 render_priority = 0
-shader = ExtResource("3_6ugvo")
+shader = ExtResource("3_nlh5h")
 shader_parameter/tint = Color(0.27451, 0.498039, 1, 0.380392)
 shader_parameter/wave_speed = 1.0
 shader_parameter/wave_freq = 10.0
@@ -22,7 +22,7 @@ orientation = 2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_02jnr"]
 render_priority = 0
-shader = ExtResource("3_j5b5y")
+shader = ExtResource("4_bxq3q")
 shader_parameter/tint = Color(1, 0, 0, 0.360784)
 shader_parameter/blur = 2.0
 
@@ -72,8 +72,8 @@ move_right = "right"
 jump = "jump"
 hotbar_up = "scroll_down"
 hotbar_down = "scroll_up"
-left_click_use = "interact_left"
-right_click_use = "interact_right"
+left_click_use = "l_click"
+right_click_use = "r_click"
 mouse_sens = 0.1
 base_swim_speed = 23.0
 
@@ -85,7 +85,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 [node name="HUD" parent="Pivot/Eyes" instance=ExtResource("1_ddqv8")]
 metadata/_edit_use_anchors_ = true
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Pivot/Eyes"]
+[node name="SearchLight" type="SpotLight3D" parent="Pivot/Eyes"]
 light_energy = 8.518
 light_volumetric_fog_energy = 0.718
 light_specular = 0.0

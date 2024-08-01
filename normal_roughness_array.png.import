@@ -1,0 +1,27 @@
+[remap]
+
+importer="2d_array_texture"
+type="CompressedTexture2DArray"
+uid="uid://dwvgw34j2d0w3"
+path.s3tc="res://.godot/imported/normal_roughness_array.png-e122b0db92742ed98b66018f0d6f57f8.s3tc.ctexarray"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://normal_roughness_array.png"
+dest_files=["res://.godot/imported/normal_roughness_array.png-e122b0db92742ed98b66018f0d6f57f8.s3tc.ctexarray"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+slices/horizontal=1
+slices/vertical=1

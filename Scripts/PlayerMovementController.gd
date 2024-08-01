@@ -28,6 +28,8 @@ extends CharacterBody3D
 @export var hotbar_down: String
 @export var left_click_use : String
 @export var right_click_use : String
+@export var interact : String
+@export var switch_light : String
 
 @export_category("Movement Variables")
 @export var gravity : float = 30
@@ -93,13 +95,16 @@ extends CharacterBody3D
 @export var starting_item_slot_4:Item = null
 @export var starting_item_slot_5:Item = null
 @export var starting_item_slot_6:Item = null
+@export var gas_tank_slot:GasTankItem = GasTankItem.new(1, 1000.0, 0, 0)
 
 var inventory: Array[Item]
 var hover_on_slot:int = 0
+var currently_holding:Item
 #Technically this makes it so the length is 7
 var max_inv_hotbar_pos:int = 6 
 #If we're using an item we don't want to be able to switch off of it, so we have this toggle here
 var can_scroll_hotbar: bool = true
+var has_connected_tank:bool
 
 
 
@@ -225,23 +230,40 @@ func handle_movement(delta):
 
 	move_and_slide()
 
+var changing_held_item = false
+var to_equip = null
+
+func handle_changing():
+	if changing_held_item:
+		if currently_holding != null:
+			currently_holding.put_away(self)
+			currently_holding = null
+		if inventory[hover_on_slot] != null:
+			currently_holding = inventory[hover_on_slot]
+			currently_holding.take_out(self)
+
+
 func handle_hotbar():
 	#Scrolling down should move the highlighted slot updwards (ie. to the right)
-	if Input.is_action_just_pressed(hotbar_up):
+	if Input.is_action_just_pressed(hotbar_up) and !changing_held_item:
+		changing_held_item = true
 		if hover_on_slot >= max_inv_hotbar_pos:
 			hover_on_slot = 0
 		else: 
 			hover_on_slot += 1
 	#Scrolling up should move the highlighted slot downwards (ie. to the left)
-	if Input.is_action_just_pressed(hotbar_down):
+	if Input.is_action_just_pressed(hotbar_down) and !changing_held_item:
+		changing_held_item = true
 		if hover_on_slot <= 0:
 			hover_on_slot = max_inv_hotbar_pos
 		else:
 			hover_on_slot -= 1
-	if Input.is_action_pressed(left_click_use) and inventory[hover_on_slot] != null:
+			
+	if Input.is_action_pressed(left_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
 		inventory[hover_on_slot].use(self)
-	if Input.is_action_pressed(right_click_use) and inventory[hover_on_slot] != null:
+	if Input.is_action_pressed(right_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
 		inventory[hover_on_slot].secondary_use(self)
+
 
 func draw_debug():
 	if not enable_debug:
@@ -272,6 +294,17 @@ func _ready():
 
 	signal_manager.connect("region_entered", region_update)
 	signal_manager.connect("region_exited", left_region)
+
+	#Set slots in array to items
+	inventory[0] = starting_item_slot_0
+	inventory[1] = starting_item_slot_1
+	inventory[2] = starting_item_slot_2
+	inventory[3] = starting_item_slot_3
+	inventory[4] = starting_item_slot_4
+	inventory[5] = starting_item_slot_5
+	inventory[6] = starting_item_slot_6
+	currently_holding = inventory[0]
+
 	print_debug("Player Ready")
 	if play_startup_anim:
 		anim_manager.play("start_up")

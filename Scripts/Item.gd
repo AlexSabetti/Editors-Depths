@@ -18,6 +18,10 @@ func use(interactor: CharacterBody3D):
 	return
 
 @warning_ignore("unused_parameter")
+func take_out(interactor:CharacterBody3D):
+	return
+
+@warning_ignore("unused_parameter")
 func put_away(interactor:CharacterBody3D):
 	return
 
