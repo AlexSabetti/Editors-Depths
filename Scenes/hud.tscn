@@ -34,7 +34,7 @@ theme_override_constants/margin_bottom = 6
 [node name="Main" type="VBoxContainer" parent="MC"]
 layout_mode = 2
 
-[node name="Top" type="HBoxContainer" parent="MC/Main"]
+[node name="Top" type="VBoxContainer" parent="MC/Main"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -103,6 +103,12 @@ layout_mode = 2
 text = "Standard"
 label_settings = ExtResource("1_xdvex")
 
+[node name="InvHoverText" type="Label" parent="MC/Main/Top"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+
 [node name="Bottom" type="HBoxContainer" parent="MC/Main"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -162,15 +168,12 @@ texture = ExtResource("7_klwjv")
 
 [node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot0"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
+offset_right = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -180,15 +183,11 @@ texture = ExtResource("7_klwjv")
 
 [node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot1"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -198,15 +197,11 @@ texture = ExtResource("7_klwjv")
 
 [node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot2"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -216,15 +211,11 @@ texture = ExtResource("7_klwjv")
 
 [node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot3"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -234,15 +225,11 @@ texture = ExtResource("7_klwjv")
 
 [node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot4"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -252,15 +239,11 @@ texture = ExtResource("7_klwjv")
 
 [node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot5"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -270,15 +253,11 @@ texture = ExtResource("7_klwjv")
 
 [node name="Item" type="TextureRect" parent="MC/Main/Bottom/HotbarBox/Slot6"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -286,3 +265,14 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.35
+
+[node name="Center" type="VBoxContainer" parent="MC"]
+layout_mode = 2
+alignment = 1
+
+[node name="Prompt" type="Label" parent="MC/Center"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 4
+horizontal_alignment = 1
+vertical_alignment = 1

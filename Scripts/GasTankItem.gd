@@ -8,9 +8,12 @@ var rank:int
 var gas_content:int
 var tank_type:int
 
+
+
 var held_model:PackedScene
 
 func _init(tank_rank:int, capacity:float, tank_build:int, tank_content:int):
+	item_id = 0
 	cur_capacity = capacity
 	rank = tank_rank
 	tank_type = tank_build
@@ -27,6 +30,7 @@ func _init(tank_rank:int, capacity:float, tank_build:int, tank_content:int):
 
 	if capacity > max_capacity:
 		cur_capacity = max_capacity
+	scene_link = "res://Scenes/GasCanister.tscn"
 
 func is_full() -> bool:
 	if(cur_capacity == max_capacity):
@@ -46,16 +50,49 @@ func get_proper_gas_name(gas_id) -> String:
 	else:
 		return "Not Implimented"
 
-func secondary_use(interactor: CharacterBody3D):
-	if interactor is PlayerMovementController:
-		var player:PlayerMovementController = interactor
-		if player.has_connected_tank:
-			var swap = player.gas_tank_slot
-			player.gas_tank_slot = self
-			player.inventory[player.hover_on_slot] = swap
-		else:
-			player.gas_tank_slot = self
-			player.inventory[player.hover_on_slot] = null
+# func secondary_use(interactor: CharacterBody3D):
+# 	if interactor is PlayerMovementController:
+# 		print("here")
+# 		var player:PlayerMovementController = interactor
+# 		if player.has_connected_tank:
+# 			var swap = player.gas_tank_slot
+# 			player.gas_tank_slot = self
+# 			player.inventory[player.hover_on_slot] = swap
+# 			player.refresh_holding()
+# 			print("switched")
+# 		else:
+# 			player.gas_tank_slot = self
+# 			player.inventory[player.hover_on_slot] = null
+# 			interactor.refresh_holding()
 
 func show_hover_text():
 	return tank_name
+
+func put_away(interactor:CharacterBody3D):
+	if interactor is PlayerMovementController:
+		interactor.changing_held = false
+		# if interactor.hands_in_anim:
+		# 	return
+		# print("made it here")
+		# interactor.anim_manager.play("TwoHandedObjectPutAway")
+		# put_away_coroutine(interactor)
+# func put_away_coroutine(interactor:PlayerMovementController):
+# 	interactor.hands_in_anim = true
+# 	await interactor.anim_manager.animation_finished
+# 	interactor.changing_held_item = false
+# 	interactor.hands_in_anim = false
+
+func take_out(interactor:CharacterBody3D):
+	if interactor is PlayerMovementController:
+		interactor.changing_held = false
+
+		# if interactor.hands_in_anim:
+		# 	return
+		# print("made it here")
+		# interactor.anim_manager.play("TwoHandedObjectTakeOut")
+		# take_out_coroutine(interactor)
+# func take_out_coroutine(interactor:PlayerMovementController):
+# 	interactor.hands_in_anim = true
+# 	await interactor.anim_manager.animation_finished
+# 	interactor.changing_held_item = false
+# 	interactor.hands_in_anim = false

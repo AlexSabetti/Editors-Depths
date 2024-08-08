@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://bj8fgooai4gcc"]
+[gd_scene load_steps=12 format=3 uid="uid://bj8fgooai4gcc"]
 
 [ext_resource type="PackedScene" uid="uid://4b87ljefy1vi" path="res://Scenes/player.tscn" id="1_06l10"]
 [ext_resource type="Material" uid="uid://ccu6ku8u0q3ei" path="res://Materials/TestingFloorMaterial.tres" id="1_matfq"]
 [ext_resource type="PackedScene" uid="uid://colrdjescnyis" path="res://Scenes/Cave.tscn" id="3_vgxxj"]
+[ext_resource type="PackedScene" uid="uid://o6ql13q0ncv3" path="res://Scenes/GasCanister.tscn" id="4_g8yal"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_owc8k"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -66,3 +67,9 @@ transform = Transform3D(1, 0, 0, 0, 0.197076, 0.980388, 0, -0.980388, 0.197076, 
 
 [node name="Node3D" parent="." instance=ExtResource("3_vgxxj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -52.7704)
+
+[node name="GasCanister" parent="." instance=ExtResource("4_g8yal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.72595, -4.71023)
+
+[node name="GasCanister2" parent="." instance=ExtResource("4_g8yal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8771, 0, 0)

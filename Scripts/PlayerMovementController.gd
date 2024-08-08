@@ -30,6 +30,8 @@ extends CharacterBody3D
 @export var right_click_use : String
 @export var interact : String
 @export var switch_light : String
+@export var pick_up : String
+@export var drop_holding : String
 
 @export_category("Movement Variables")
 @export var gravity : float = 30
@@ -51,6 +53,8 @@ extends CharacterBody3D
 @onready var anim_manager: AnimationPlayer = get_node("AnimationPlayer")
 @onready var underwater_overlay: MeshInstance3D = get_node("Pivot/Eyes/LiquidOverlay")
 @onready var damage_overlay: MeshInstance3D = get_node("Pivot/Eyes/DamageOverlay")
+@onready var drop_local: Node3D = get_node("Pivot/DropLocal")
+@onready var search_light: SpotLight3D = get_node("Pivot/Eyes/SearchLight")
 
 @export_category("Debug")
 @export var enable_debug : bool = false
@@ -114,11 +118,18 @@ var drawing_from_mask:bool = false
 var frame_timer = bhop_timing_frames
 
 #Status Conditions
+
+## Whether or not our head is submerged
 var is_submerged = false
+## Whether or not we are within an area of liquid
 var in_liquid: bool = false
+## Whether or not our legs are submerged
 var is_wading: bool = false
+## Whether or not we are currently in hitstun
 var is_flinching: bool = false
+## Whether or not we are considered swimming
 var is_swimming: bool = false
+## Whether or not we are considered alive
 var is_alive: bool = true
 var in_control: bool = true
 var is_crouching:bool = false
@@ -128,7 +139,6 @@ var is_drowning: bool = false
 #Tracking Properties
 var current_health: float
 var current_air_supply: float
-var base_with_reserve_air_supply: float
 var can_call_air_subroutine: bool = true
 var defaulting_location_title:String = "Ocean"
 var corruption: float = 0
@@ -138,6 +148,7 @@ var movement_mod = Vector3(1,1,1)
 var movement = Vector2()
 var movement_dir = Vector3()
 
+var hands_in_anim = false
 #Signal Bus
 var signal_manager = VoidScreamers
 
@@ -146,6 +157,24 @@ func update_mouse_mode():
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	else:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+func misc_actions():
+	if Input.is_action_just_pressed("toggle_light"):
+		search_light.visible = !search_light.visible
+	if Input.is_action_just_pressed("drop") and !changing_held_item:
+		if inventory[hover_on_slot] != null:
+			drop_item()
+
+func drop_item():
+		var dropped_scene = load(inventory[hover_on_slot].scene_link)
+		var instance = dropped_scene.instantiate()
+		instance.load_payload(inventory[hover_on_slot])
+		instance.position = drop_local.global_position
+		#instance.linear_velocity = player.glo
+		get_node("/root/TestingChamber").add_child(instance)
+		inventory[hover_on_slot] = null
+		currently_holding = null
+		refresh_holding()
 
 func mouse_look(event):
 	if in_control and char_cam:
@@ -174,7 +203,7 @@ func accelerate(acc_dir, prev_vel, acc, max_vel, delta):
 	return prev_vel + acc_dir * acc_vel
 
 func get_next_vel(prev_vel, delta):
-	print(vel.y)
+	#print(vel.y)
 	if vel.y < fall_damage_threshold and is_on_floor():
 			
 			print("got here")
@@ -184,7 +213,7 @@ func get_next_vel(prev_vel, delta):
 	if is_submerged:
 		return
 	var grounded = is_on_floor()
-	print(grounded)
+	#print(grounded)
 	var can_jump = grounded
 
 	if grounded and (frame_timer >= bhop_timing_frames):
@@ -237,13 +266,21 @@ var changing_held_item = false
 var to_equip = null
 
 func handle_changing():
+	
 	if changing_held_item:
+		#print("got here")
+		print(currently_holding)
 		if currently_holding != null:
 			currently_holding.put_away(self)
 			currently_holding = null
 		if inventory[hover_on_slot] != null:
+			print("taking out")
 			currently_holding = inventory[hover_on_slot]
+			hud.change_inv_hb_text(currently_holding.hover_name)
 			currently_holding.take_out(self)
+		else:
+			currently_holding = null
+			changing_held_item = false
 
 
 func handle_hotbar():
@@ -266,6 +303,7 @@ func handle_hotbar():
 		else:
 			hud.highlight_hover_slot(hover_on_slot, hover_on_slot - 1)
 			hover_on_slot -= 1
+			
 	if prev_hover_on_slot != hover_on_slot:
 		print("Switched to: {0}".format([hover_on_slot]))
 		if inventory[prev_hover_on_slot] == null and inventory[hover_on_slot] == null:
@@ -274,7 +312,16 @@ func handle_hotbar():
 		inventory[hover_on_slot].use(self)
 	if Input.is_action_pressed(right_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
 		inventory[hover_on_slot].secondary_use(self)
+	handle_changing()
 
+func refresh_holding():
+	if currently_holding == null and inventory[hover_on_slot] != null:
+		currently_holding = inventory[hover_on_slot]
+		currently_holding.take_out(self)
+	elif currently_holding != null and inventory[hover_on_slot] == null:
+		currently_holding = null
+		hud.change_inv_hb_text("")
+		hud.add_item_slot_texture(-13,hover_on_slot)
 
 func draw_debug():
 	if not enable_debug:
@@ -293,6 +340,7 @@ func  _physics_process(delta):
 	if is_alive and !is_drowning and !is_flinching:
 		handle_movement(delta)
 		handle_hotbar()
+		misc_actions()
 	draw_debug()
 
 func _unhandled_input(event):
@@ -316,7 +364,9 @@ func _ready():
 	inventory[6] = starting_item_slot_6
 	currently_holding = inventory[0]
 	hud.highlight_hover_slot(0,0)
+
 	print_debug("Player Ready")
+
 	if play_startup_anim:
 		anim_manager.play("start_up")
 		start_up_coroutine()
@@ -386,7 +436,7 @@ func check_statuses():
 				deal_passive_damage(corruption_damage)
 				can_deal_corrupt_damage = false
 				corruption_damage_coroutine()
-			#Damage is dealt too fast, need to add a timer which allows it to be more reasonable
+
 		if in_liquid:
 			if current_air_supply <= 0.0:
 				is_drowning = true
@@ -428,12 +478,14 @@ func die():
 	in_control = false;
 	#Probably should start some sort of animation here, before destroying the player object.
 	#For now, probably just make it quit
+
 func deal_passive_damage(damage: float):
 	current_health -= damage
 	if current_health <= 0.0:
 		die()
 	#perhaps play a sound here?
 	#No flinching, unlike contact damage
+
 func deal_damage(damage:float):
 	if damage <= 0:
 		print("Healing does not go here")
