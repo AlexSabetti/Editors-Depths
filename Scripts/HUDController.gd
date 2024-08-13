@@ -52,3 +52,6 @@ func swap_item_slot_texture(item_type:Item, slot:int):
 	var text_rect: TextureRect = hotbar_box.get_child(slot).get_child(0)
 	text_rect.texture = load(item_texture_dict.get(item_type.item_id))
 
+func remove_item_sprite_from_hotbar(slot:int):
+	var text_rect: TextureRect = hotbar_box.get_child(slot).get_child(0)
+	text_rect.texture = null

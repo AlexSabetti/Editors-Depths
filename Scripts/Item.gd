@@ -9,6 +9,11 @@ extends Node3D
 @export var item_id:int
 @export var scene_link:String
 
+var use_anim_name
+var secondary_use_anim_name
+var take_out_anim_name
+var put_away_anim_name 
+
 func show_hover_text() -> String:
 	return ""
 

@@ -13,6 +13,10 @@ var tank_type:int
 var held_model:PackedScene
 
 func _init(tank_rank:int, capacity:float, tank_build:int, tank_content:int):
+
+	take_out_anim_name = "TwoHandedObjectTakeOut"
+	put_away_anim_name = "TwoHandedObjectPutAway"
+	
 	item_id = 0
 	cur_capacity = capacity
 	rank = tank_rank

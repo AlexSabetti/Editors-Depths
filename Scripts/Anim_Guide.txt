@@ -1,0 +1,22 @@
+Small Item Standard Local: 
+0.666 -0.287 -0.6
+
+Offscreen Small Item Standard Local:
+0.666 -0.746 -0.6
+
+Two-Handed Item Standard Local
+0 -0.427 -0.6
+
+OffScreen Two-Handed Item Standard Local
+0 -0.8 -0.6
+
+
+Item Animations
+* Take Out Small
+* Put Away Small
+* Take Out Large
+* Put Away Large
+* Take Out Firearm OneHand
+* Put Away Firearm OneHand
+* Take Out Firearm TwoHand
+* Put Away Firearm TwoHand

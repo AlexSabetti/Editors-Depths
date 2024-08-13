@@ -70,6 +70,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -52.7704)
 
 [node name="GasCanister" parent="." instance=ExtResource("4_g8yal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.72595, -4.71023)
+cur_capacity = 1000.0
 
 [node name="GasCanister2" parent="." instance=ExtResource("4_g8yal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8771, 0, 0)

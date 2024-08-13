@@ -173,8 +173,7 @@ func drop_item():
 		#instance.linear_velocity = player.glo
 		get_node("/root/TestingChamber").add_child(instance)
 		inventory[hover_on_slot] = null
-		currently_holding = null
-		refresh_holding()
+		refresh_holding_2()
 
 func mouse_look(event):
 	if in_control and char_cam:
@@ -265,8 +264,43 @@ func handle_movement(delta):
 var changing_held_item = false
 var to_equip = null
 
+func handle_hotbar_2():
+	var prev_hover_on = hover_on_slot
+	if Input.is_action_just_pressed(hotbar_up) and can_scroll_hotbar:
+		if hover_on_slot >= max_inv_hotbar_pos:
+			hud.highlight_hover_slot(max_inv_hotbar_pos, 0)
+			hover_on_slot = 0
+		else: 
+			hud.highlight_hover_slot(hover_on_slot, hover_on_slot + 1)
+			hover_on_slot += 1
+	if Input.is_action_just_pressed(hotbar_down) and !changing_held_item:
+		if hover_on_slot <= 0:
+			hud.highlight_hover_slot(0, max_inv_hotbar_pos)
+			hover_on_slot = max_inv_hotbar_pos
+		else:
+			hud.highlight_hover_slot(hover_on_slot, hover_on_slot - 1)
+			hover_on_slot -= 1
+	if prev_hover_on != hover_on_slot:
+		handle_changing_2()
+	else:
+		if Input.is_action_pressed(left_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
+			#can_scroll_hotbar = false
+			inventory[hover_on_slot].use(self)
+		if Input.is_action_pressed(right_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
+			#can_scroll_hotbar = false
+			inventory[hover_on_slot].secondary_use(self)
+
+func handle_changing_2():
+	if inventory[hover_on_slot] != null:	
+		#if anim_manager.is_playing():
+			#anim_manager.stop(false)
+			#anim_manager.play(inventory[hover_on_slot].take_out_anim_name)
+		anim_manager.stop(false)
+		anim_manager.play(inventory[hover_on_slot].take_out_anim_name)
+	currently_holding = inventory[hover_on_slot]
+		
+
 func handle_changing():
-	
 	if changing_held_item:
 		#print("got here")
 		print(currently_holding)
@@ -323,6 +357,18 @@ func refresh_holding():
 		hud.change_inv_hb_text("")
 		hud.add_item_slot_texture(-13,hover_on_slot)
 
+func refresh_holding_2():
+	#This happens when we pick something up
+	if currently_holding == null and inventory[hover_on_slot] != null:
+		handle_changing_2()
+		hud.change_inv_hb_text(currently_holding.hover_name)
+	#This happens when we drop something
+	elif currently_holding != null and inventory[hover_on_slot] == null: 
+		currently_holding = null
+		hud.change_inv_hb_text("")
+		hud.remove_item_sprite_from_hotbar(hover_on_slot)
+
+
 func draw_debug():
 	if not enable_debug:
 		return
@@ -339,7 +385,7 @@ func  _physics_process(delta):
 	update_stats()
 	if is_alive and !is_drowning and !is_flinching:
 		handle_movement(delta)
-		handle_hotbar()
+		handle_hotbar_2()
 		misc_actions()
 	draw_debug()
 

@@ -34,10 +34,11 @@ func pickup(collision:OnGroundItem):
 
 			proper_owner.inventory[proper_owner.hover_on_slot] = collision.send_inv_form()
 			proper_owner.hud.add_item_slot_texture(proper_owner.inventory[proper_owner.hover_on_slot].item_id, proper_owner.hover_on_slot)
-			proper_owner.currently_holding = proper_owner.inventory[proper_owner.hover_on_slot]
-			print(proper_owner.currently_holding)
-			proper_owner.currently_holding.take_out(proper_owner)
-			proper_owner.hud.change_inv_hb_text(proper_owner.currently_holding.hover_name)
+			proper_owner.refresh_holding_2()
+			# proper_owner.currently_holding = proper_owner.inventory[proper_owner.hover_on_slot]
+			# print(proper_owner.currently_holding)
+			# proper_owner.currently_holding.take_out(proper_owner)
+			# proper_owner.hud.change_inv_hb_text(proper_owner.currently_holding.hover_name)
 			collision.destroy()
 	else:
 		var i = 0
@@ -45,8 +46,6 @@ func pickup(collision:OnGroundItem):
 			if slot == null:
 				proper_owner.inventory[i] = collision.send_inv_form()
 				proper_owner.hud.add_item_slot_texture(proper_owner.inventory[i].item_id, i)
-				proper_owner.currently_holding = proper_owner.inventory[i]
-				proper_owner.hud.change_inv_hb_text(proper_owner.currently_holding.hover_name)
 				collision.destroy()
 			else:
 				i += 1
