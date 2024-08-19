@@ -44,6 +44,7 @@ extends CharacterBody3D
 @export var bhop_timing_frames: int = 2
 @export var additive_bhop : bool = true
 @export var mouse_sens: float = 1
+@export 
 
 @export_category("Controlled Nodes")
 #Hook up all status stuff later
@@ -113,6 +114,7 @@ var has_connected_tank:bool
 ## Specifies whether or not we deplete air from our lungs or the external tank
 var drawing_from_mask:bool = false
 
+var hooked:bool = false
 
 
 var frame_timer = bhop_timing_frames
@@ -419,6 +421,13 @@ func _ready():
 	else:
 		in_control = true;
 	update_mouse_mode()
+
+func get_swinging_vel(manager:KineticRifle, vel_comp):
+	var dir = (manager.hook_anchor_pos - global_transform.origin).normalized()
+	var dist = (manager.hook_anchor_pos - global_transform.origin).length()
+
+	if dist > manager.remaining_rope_length:
+		var forc = dir * (dist - manager.remaining_rope_length) * 
 
 func get_swimming_vel():
 	var swim_vec = Vector3(0,0,0)
