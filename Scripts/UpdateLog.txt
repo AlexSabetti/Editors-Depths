@@ -1,3 +1,6 @@
 8/18/2024, Committed and Pushed:
 Began work on the main "weapon" that will be used. Struggling a bit, have to remember some old physics stuff. Added LinkedLists and ListNodes for stuff later.
 Updates will be sparce for the time being, college is starting tomorrow. Things will go better this time. Don't know what to do if it doesn't.
+
+12/21/2024, Update note:
+Wasn't able to work on project since last push. Things went well, if the reader is wondering.
