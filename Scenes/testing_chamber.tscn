@@ -1,9 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://bj8fgooai4gcc"]
+[gd_scene load_steps=16 format=3 uid="uid://bj8fgooai4gcc"]
 
 [ext_resource type="PackedScene" uid="uid://4b87ljefy1vi" path="res://Scenes/player.tscn" id="1_06l10"]
 [ext_resource type="Material" uid="uid://ccu6ku8u0q3ei" path="res://Materials/TestingFloorMaterial.tres" id="1_matfq"]
 [ext_resource type="PackedScene" uid="uid://colrdjescnyis" path="res://Scenes/Cave.tscn" id="3_vgxxj"]
 [ext_resource type="PackedScene" uid="uid://o6ql13q0ncv3" path="res://Scenes/GasCanister.tscn" id="4_g8yal"]
+[ext_resource type="Script" path="res://Scripts/RegionManager.gd" id="5_4jk5h"]
+[ext_resource type="Script" path="res://Scripts/UniqueRegion.gd" id="6_hc8cd"]
+[ext_resource type="PackedScene" uid="uid://bauph0kprgjpi" path="res://TestScene.tscn" id="7_p1x2g"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_owc8k"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -32,6 +35,9 @@ size = Vector3(10, 0.3, 7)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ufrhl"]
 size = Vector3(10, 0.3, 7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rb4sj"]
+size = Vector3(20, 8, 20)
 
 [node name="TestingChamber" type="Node3D"]
 
@@ -74,3 +80,17 @@ cur_capacity = 1000.0
 
 [node name="GasCanister2" parent="." instance=ExtResource("4_g8yal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8771, 0, 0)
+
+[node name="RegionManager" type="Node3D" parent="."]
+script = ExtResource("5_4jk5h")
+
+[node name="Zone" type="Area3D" parent="."]
+script = ExtResource("6_hc8cd")
+region_title = "Test"
+displayed_scene = ExtResource("7_p1x2g")
+
+[node name="Node_Storage" type="Node3D" parent="Zone"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Zone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.39123, 6.79775)
+shape = SubResource("BoxShape3D_rb4sj")

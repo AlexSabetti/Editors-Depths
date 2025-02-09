@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3 uid="uid://ce47nkkdjiy2c"]
+
+[ext_resource type="Material" uid="uid://ccu6ku8u0q3ei" path="res://Materials/TestingFloorMaterial.tres" id="2_7o0k6"]
+[ext_resource type="Script" path="res://Scripts/TCvrTerra.gd" id="2_l8ixl"]
+[ext_resource type="PackedScene" uid="uid://4b87ljefy1vi" path="res://Scenes/player.tscn" id="3_rmi6b"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lu4pn"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6fk1i"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_641kx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_1f1fy"]
+material = ExtResource("2_7o0k6")
+
+[node name="Main" type="Node3D"]
+
+[node name="Player" parent="." instance=ExtResource("3_rmi6b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17.8181, 0)
+play_startup_anim = false
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.3686, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_lu4pn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_6fk1i")
+
+[node name="Terrain" type="Node3D" parent="." node_paths=PackedStringArray("player_node", "base_mesh_isnt", "chunk_node")]
+script = ExtResource("2_l8ixl")
+player = NodePath("../Player")
+MATERIAL = ExtResource("2_7o0k6")
+noise = SubResource("FastNoiseLite_641kx")
+player_node = NodePath("../Player")
+base_mesh_isnt = NodePath("../MeshInstance3D")
+chunk_node = NodePath(".")
+noise_amp = 40.0
+high_reso = 128
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_1f1fy")

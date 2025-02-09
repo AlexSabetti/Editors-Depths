@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://45wt27srvffx"]
+[gd_scene load_steps=8 format=3 uid="uid://jxp6bbrppt5u"]
 
 [ext_resource type="Script" path="res://Scripts/HUDController.gd" id="1_q15wx"]
 [ext_resource type="LabelSettings" uid="uid://c0jstdr536nwx" path="res://Various_Settings/Jersey15LabelFontSettings.tres" id="1_xdvex"]

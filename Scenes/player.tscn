@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3 uid="uid://4b87ljefy1vi"]
 
 [ext_resource type="Script" path="res://Scripts/PlayerMovementController.gd" id="1_7flee"]
-[ext_resource type="PackedScene" uid="uid://45wt27srvffx" path="res://Scenes/hud.tscn" id="1_ddqv8"]
+[ext_resource type="PackedScene" uid="uid://jxp6bbrppt5u" path="res://Scenes/hud.tscn" id="1_ddqv8"]
 [ext_resource type="Script" path="res://Scripts/SwimControl.gd" id="3_mm2hk"]
 [ext_resource type="Shader" path="res://Shaders/UnderwaterShader.gdshader" id="3_nlh5h"]
 [ext_resource type="Shader" path="res://Shaders/DamageShader.gdshader" id="4_bxq3q"]
@@ -178,6 +178,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.666, -0.898456, -0.6)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, -0.6)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot/Eyes/TwoHandItemShowNode"]
+visible = false
 mesh = SubResource("CylinderMesh_qjp00")
 skeleton = NodePath("../../SmallItemShowNode")
 

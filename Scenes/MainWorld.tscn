@@ -5,9 +5,9 @@
 [ext_resource type="Script" path="res://Scripts/SwimmableLiquid.gd" id="2_61l5r"]
 [ext_resource type="Script" path="res://Scripts/PocketZone.gd" id="3_3pbjl"]
 [ext_resource type="PackedScene" uid="uid://cp5f5owd0x1dr" path="res://Scenes/Water_Plane.tscn" id="3_3113r"]
-[ext_resource type="PackedScene" path="res://Scenes/ocean_floor.tscn" id="4_mcbu3"]
+[ext_resource type="PackedScene" uid="uid://brtxj5xwycjey" path="res://Scenes/ocean_floor.tscn" id="4_mcbu3"]
 [ext_resource type="PackedScene" uid="uid://4b87ljefy1vi" path="res://Scenes/player.tscn" id="4_veqn2"]
-[ext_resource type="PackedScene" path="res://Scenes/static_portal.tscn" id="8_14c46"]
+[ext_resource type="PackedScene" uid="uid://dhah5cvncq7qi" path="res://Scenes/static_portal.tscn" id="8_14c46"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ek3yl"]
 shader = ExtResource("1_uryen")

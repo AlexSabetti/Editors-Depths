@@ -14,3 +14,7 @@ func activated(interactor: CharacterBody3D):
 ## To be overrided
 func get_hover_tip() -> String:
 	return ""
+
+## To be overrided
+func get_state():
+	return null
