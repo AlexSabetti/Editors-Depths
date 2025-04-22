@@ -195,7 +195,7 @@ func get_wishdir():
 func get_jump():
 	return sqrt(4 * jump_force * gravity)
 
-func get_gravity(delta):
+func get_grav(delta):
 	return gravity * delta
 
 func accelerate(acc_dir, prev_vel, acc, max_vel, delta):
@@ -237,7 +237,7 @@ func get_next_vel(prev_vel, delta):
 		max_vel = max_air_vel
 		accel = air_acc
 	var velo = accelerate(get_wishdir(), prev_vel, accel, max_vel, delta)
-	velo += Vector3.DOWN * get_gravity(delta)
+	velo += Vector3.DOWN * get_grav(delta)
 
 	if(Input.is_action_pressed(jump) if jump_when_held else Input.is_action_just_pressed(jump) and movement_enabled and can_jump):
 		velo.y = get_jump()

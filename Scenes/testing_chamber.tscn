@@ -85,6 +85,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8771, 0, 0)
 script = ExtResource("5_4jk5h")
 
 [node name="Zone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.57319, 14.6126)
 script = ExtResource("6_hc8cd")
 region_title = "Test"
 displayed_scene = ExtResource("7_p1x2g")
@@ -92,5 +93,4 @@ displayed_scene = ExtResource("7_p1x2g")
 [node name="Node_Storage" type="Node3D" parent="Zone"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Zone"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.39123, 6.79775)
 shape = SubResource("BoxShape3D_rb4sj")

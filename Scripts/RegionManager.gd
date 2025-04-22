@@ -54,6 +54,11 @@ func load_region_data(non_native_nodes, packed_scene_name, region_title, origin_
 func unload_region_data(non_native_nodes, packed_scene_name, region_title, origin_node):
 	var non_native_nodes_data = serialize_nodes(non_native_nodes)
 	save_to_file("res://Data/Regions/Saved_Non_Native_Nodes_" + region_title + ".json", non_native_nodes_data)
+	if packed_scene_name:
+		var n = origin_node.get_child(0)
+		for node in n.get_children():
+				node.queue_free()
+		origin_node.get_child(0).queue_free()
 	
 func serialize_nodes(nodes):
 	var serialized_data = []
@@ -73,15 +78,16 @@ func serialize_node(node):
 
 func save_to_file(file_path, data):
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
-	file.store_string(data)
-	file.close()
+	if file:
+		file.store_string(JSON.stringify(data))
+		file.close()
 
 func load_from_file(file_path):
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file:
 		var data = file.get_as_text()
 		file.close()
-		return data
+		return JSON.parse_string(data).result
 	return null
 
 func deserialize_nodes(data):
@@ -100,6 +106,6 @@ func deserialize_node(data):
 		node.rotation = data["rot"]
 		node.scale = data["scale"]
 		node.global_transform.origin = data["pos"]
-		if "state" in data:
+		if "state" in data:  
 			node.set_state(data["state"])
 	return node

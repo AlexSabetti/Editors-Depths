@@ -24,13 +24,13 @@ void fragment() {
 		for(float y = -blur_strength; y <= blur_strength; y+= blur_strength / 10.0) {
 			blurred_color += texture(SCREEN_TEXTURE, SCREEN_UV + wave_uv_offset + vec2(x,y)).rgb;
 			sample_count++;
-		}	
+		}
 	}
-	
+
 	blurred_color /= float(sample_count);
 	ALBEDO = blurred_color * tint.rgb;
 	ALPHA = tint.a;
-	
+
 }
 
 //void light() {

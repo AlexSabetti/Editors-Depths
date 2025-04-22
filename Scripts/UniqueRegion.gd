@@ -35,7 +35,7 @@ func on_exit(entity):
 		print(packed_scene_name)
 		var n = get_child(0)
 		for node in n.get_children():
-			var stored_object: UnloadedObject
+			var stored_object: UnloadedObject  = UnloadedObject.new()
 			if node is TankWorldObject:
 				
 				stored_object.data = node.send_inv_form()
