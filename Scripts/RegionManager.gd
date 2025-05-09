@@ -4,11 +4,13 @@ extends Node3D
 
 var load_queue = []
 var unload_queue = []
-var unload_thread = Thread.new()
-var load_thread = Thread.new()
+var unload_thread:Thread = Thread.new()
+var load_thread:Thread = Thread.new()
 var load_thread_active = false
 var unload_thread_active = false
 
+var load_queue_mutex: Mutex = Mutex.new()
+var unload_queue_mutex: Mutex = Mutex.new()
 var signal_manager: SignalBus = VoidScreamers
 
 func _ready():
@@ -16,27 +18,59 @@ func _ready():
 	signal_manager.connect("unload_region", _unload_region)
 
 func _load_region(non_native_nodes, packed_scene_name, region_title, origin_node):
+	print("Grabbing mutex")
+	load_queue_mutex.lock()
+	print("got mutex")
+	# Critical Section
 	load_queue.append({"non_native_nodes": non_native_nodes, "packed_scene_name": packed_scene_name, "region_title": region_title, "origin_node": origin_node})
-	if not load_thread_active:
+	print("added to queue")
+	print(load_queue)
+	load_queue_mutex.unlock()
+
+	if not load_thread.is_started():
 		load_thread.start(_load_region_thread)
+	else:
+		load_thread.wait_to_finish()
 
 func _unload_region(non_native_nodes, packed_scene_name, region_title, origin_node):
+	
+	print("Grabbing mutex")
+	unload_queue_mutex.lock()
+	print("got mutex")
+	# Critical Section
 	unload_queue.append({"non_native_nodes": non_native_nodes, "packed_scene_name": packed_scene_name, "region_title": region_title, "origin_node": origin_node})
-	if not unload_thread_active:
+	print("added to queue")
+	print(unload_queue)
+	unload_queue_mutex.unlock()
+	
+	if not unload_thread.is_started():
 		unload_thread.start(_unload_region_thread)
+	else:
+		unload_thread.wait_to_finish()
 
 func _load_region_thread():
 	load_thread_active = true
 	while load_queue.size() > 0:
+		load_queue_mutex.lock()
 		var task = load_queue.pop_front()
 		load_region_data(task["non_native_nodes"], task["packed_scene_name"], task["region_title"], task["origin_node"])
+		load_queue_mutex.unlock()
+		
+		
+	
+	print("Load thread finished")
 	load_thread_active = false
+	
 
 func _unload_region_thread():
 	unload_thread_active = true
 	while unload_queue.size() > 0:
+		unload_queue_mutex.lock()
 		var task = unload_queue.pop_front()
-		unload_region_data(task["non_native_nodes"], task["packed_scene_name"], task["region_title"], task["origin_node"])
+		unload_region_data(task["non_native_nodes"], task["packed_scene_name"], task["region_title"])
+		unload_queue_mutex.unlock()
+		
+	print("Unload thread finished")
 	unload_thread_active = false
 
 func load_region_data(non_native_nodes, packed_scene_name, region_title, origin_node):
@@ -51,14 +85,13 @@ func load_region_data(non_native_nodes, packed_scene_name, region_title, origin_
 		for n in nodes:
 			origin_node.get_child(0).call_deferred("add_child", n)
 
-func unload_region_data(non_native_nodes, packed_scene_name, region_title, origin_node):
+func unload_region_data(non_native_nodes, packed_scene_name, region_title):
 	var non_native_nodes_data = serialize_nodes(non_native_nodes)
+
+	
 	save_to_file("res://Data/Regions/Saved_Non_Native_Nodes_" + region_title + ".json", non_native_nodes_data)
-	if packed_scene_name:
-		var n = origin_node.get_child(0)
-		for node in n.get_children():
-				node.queue_free()
-		origin_node.get_child(0).queue_free()
+	
+		
 	
 func serialize_nodes(nodes):
 	var serialized_data = []
@@ -74,6 +107,7 @@ func serialize_node(node):
 	data["scale"] = node.scale
 	if node is Interactable:
 		data["state"] = node.get_state()
+	node.queue_free()
 	return data
 
 func save_to_file(file_path, data):
@@ -87,7 +121,7 @@ func load_from_file(file_path):
 	if file:
 		var data = file.get_as_text()
 		file.close()
-		return JSON.parse_string(data).result
+		return JSON.parse_string(data)
 	return null
 
 func deserialize_nodes(data):

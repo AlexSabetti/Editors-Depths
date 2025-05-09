@@ -5,8 +5,8 @@
 [ext_resource type="Script" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="3_hft2j"]
 [ext_resource type="Shader" path="res://addons/zylann.hterrain/shaders/array.gdshader" id="4_lph2p"]
 [ext_resource type="Script" path="res://Scripts/UniqueRegion.gd" id="4_srmjt"]
-[ext_resource type="CompressedTexture2DArray" uid="uid://dw1gj5pg4c8md" path="res://albedo_bump_array.png" id="5_3i32x"]
-[ext_resource type="CompressedTexture2DArray" uid="uid://dwvgw34j2d0w3" path="res://normal_roughness_array.png" id="6_kfp1o"]
+[ext_resource type="CompressedTexture2DArray" uid="uid://dw1gj5pg4c8md" path="res://Materials/albedo_bump_array.png" id="5_3i32x"]
+[ext_resource type="CompressedTexture2DArray" uid="uid://dwvgw34j2d0w3" path="res://Materials/normal_roughness_array.png" id="6_kfp1o"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_emshb"]
 size = Vector3(0.516113, 0.167728, 0.512421)
@@ -24,6 +24,7 @@ region_title = "Ocean Floor"
 region_tie_id = 2
 is_vertical_region = true
 region_type = "Swimmable"
+is_empty = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1000, 0, 0, 0, 1000, 0, 0, 0, 1000, 0, 21.817, 0)

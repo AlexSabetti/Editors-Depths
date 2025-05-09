@@ -103,6 +103,7 @@ shape = SubResource("BoxShape3D_rw6wu")
 
 [node name="TitleArea" type="Area3D" parent="PocketNodes/Standard"]
 script = ExtResource("2_4f48e")
+is_empty = true
 
 [node name="Region" type="CollisionShape3D" parent="PocketNodes/Standard/TitleArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 25, 0)

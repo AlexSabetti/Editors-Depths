@@ -138,6 +138,9 @@ var is_crouching:bool = false
 var not_in_menu: bool = true
 var is_drowning: bool = false
 
+var is_tumbling: bool = false
+var is_in_knockback: bool = false
+
 #Tracking Properties
 var current_health: float
 var current_air_supply: float
@@ -179,11 +182,14 @@ func drop_item():
 
 func mouse_look(event):
 	if in_control and char_cam:
-		if event is InputEventMouseMotion:
+		if event is InputEventMouseMotion and not is_tumbling:
 			rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
 			#print(rotation)
 			pivot.rotate_x(deg_to_rad(-event.relative.y * mouse_sens))
-			pivot.rotation = Vector3(clampf(pivot.rotation.x, -deg_to_rad(70), deg_to_rad(70)), 0, 0)
+			if not is_submerged: 
+				pivot.rotation = Vector3(clampf(pivot.rotation.x, -deg_to_rad(70), deg_to_rad(70)), 0, 0)
+			else:
+				pivot.rotation = Vector3(pivot.rotation.x, 0, 0)
 
 func get_wishdir():
 	if not movement_enabled:
@@ -505,7 +511,10 @@ func check_statuses():
 				underwater_overlay.visible = true;
 			elif depth >= 1.0 and depth <= 1.5:
 				is_wading = true
+				pivot.rotation = Vector3(clampf(pivot.rotation.x, -deg_to_rad(70), deg_to_rad(70)), 0, 0)
 			else:
+				# These are temporary until I can put these in their own function. It exists to fix the view back from the free rotation you get from being underwater.
+				pivot.rotation = Vector3(clampf(pivot.rotation.x, -deg_to_rad(70), deg_to_rad(70)), 0, 0)
 				underwater_overlay.visible = false
 				is_submerged = false
 				is_wading = false
@@ -588,7 +597,7 @@ func draw_from_air_supply_coroutine():
 
 func update_hud():
 	if hud.info_box.visible:
-		hud.x_coord_stats.text = "{0}".format([global_position.x])
+		hud.x_coord_stats.text = "{0}".format([global_position.x])   
 		hud.z_coord_stats.text = "{0}".format([global_position.z])
 		hud.depth_stats.text = "{0}".format([global_position.y])
 	hud.air_bar.value = current_air_supply
