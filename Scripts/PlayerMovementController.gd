@@ -48,7 +48,7 @@ extends CharacterBody3D
 
 @export_category("Controlled Nodes")
 #Hook up all status stuff later
-@onready var pivot = get_node("Pivot")
+@onready var pivot:Node3D = get_node("Pivot")
 @onready var char_cam: Camera3D = get_node("Pivot/Eyes")
 @onready var hud: HUDController = get_node("Pivot/Eyes/HUD")
 @onready var anim_manager: AnimationPlayer = get_node("AnimationPlayer")
@@ -102,6 +102,18 @@ extends CharacterBody3D
 @export var starting_item_slot_6:Item = null
 @export var gas_tank_slot:GasTankItem = GasTankItem.new(1, 1000.0, 0, 0)
 
+@export_category("Tumble Settings")
+@export var tumb_rot_speed: float = 2.0
+@export var tumb_dur: float = 3.0
+@export var tumb_recov_speed: float = 0.5
+@export var min_tumble_impact: float = 15.0
+
+@export_category("Flinch Settings")
+@export var flinch_dur: float = 0.5
+@export var min_flinch_damage: float = 5.0 # change during _ready to be a % of max health perhaps?
+@export var flinch_rot_speed: float = 1.0
+@export var flinch_recov_speed: float = 0.8
+
 var inventory: Array[Item] = [null, null, null, null, null, null, null]
 var hover_on_slot:int = 0
 var currently_holding:Item
@@ -118,6 +130,22 @@ var hooked:bool = false
 
 
 var frame_timer = bhop_timing_frames
+var tumble_timer: float = 0.0
+var flinch_timer: float = 0.0
+
+# misc tumble variables
+var target_tumble_rot: Vector3
+var tumble_recover: bool = false
+var init_tumble_rot: Vector3
+
+#misc flinch variables
+var flinch_recover: bool = false
+var init_flinch_rot: Vector3
+var target_flinch_rot: Vector3
+var flinch_recover_time: float = 0.5
+
+#misc camera variables
+var camera_is_reset: bool = true
 
 #Status Conditions
 
@@ -183,7 +211,10 @@ func drop_item():
 func mouse_look(event):
 	if in_control and char_cam:
 		if event is InputEventMouseMotion and not is_tumbling:
-			rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
+			if is_submerged:
+				global_rotate(char_cam.global_basis.y, deg_to_rad(-event.relative.x * mouse_sens))
+			else:
+				rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
 			#print(rotation)
 			pivot.rotate_x(deg_to_rad(-event.relative.y * mouse_sens))
 			if not is_submerged: 
@@ -392,7 +423,8 @@ func draw_debug():
 func  _physics_process(delta):
 	check_statuses()
 	update_stats()
-	if is_alive and !is_drowning and !is_flinching:
+	if is_alive and !is_drowning:
+		handle_all_states(delta)
 		handle_movement(delta)
 		handle_hotbar_2()
 		misc_actions()
@@ -447,9 +479,9 @@ func get_swimming_vel():
 	if Input.is_action_pressed(move_backward):
 		swim_vec += char_cam.global_transform.basis.z
 	if Input.is_action_pressed(move_left):
-		swim_vec += -global_transform.basis.x
+		swim_vec += -char_cam.global_transform.basis.x
 	if Input.is_action_pressed(move_right):
-		swim_vec += global_transform.basis.x
+		swim_vec += char_cam.global_transform.basis.x
 	
 	#if Input.is_action_just_pressed("jump") && can_boost:
 		#movement_mod *= boost_multiplier
@@ -468,7 +500,7 @@ func get_swimming_vel():
 	movement_dir = (Vector3(swim_vec.x, swim_vec.y, swim_vec.z).normalized())
 	#print("move-dir:")
 	#print(movement_dir)
-	if movement_dir and !is_flinching:
+	if movement_dir and !is_tumbling:
 		vel = movement_dir * base_swim_speed * movement_mod
 		
 		# vel.x = clampf(vel.x, -8, 8)
@@ -478,7 +510,7 @@ func get_swimming_vel():
 			vel.y = 20
 		# vel.z = clampf(vel.z, -8, 8)
 		draw_air_amount_modifier = 1.3
-	else:
+	elif !is_tumbling:
 		vel.x = move_toward(vel.x, 0, base_swim_speed / underwater_friction)
 		vel.y = move_toward(vel.y, 0, base_swim_speed / underwater_friction)
 		vel.z = move_toward(vel.z, 0, base_swim_speed / underwater_friction)
@@ -502,19 +534,20 @@ func check_statuses():
 		if in_liquid:
 			if current_air_supply <= 0.0:
 				is_drowning = true
-				#Going to need to start some coroutine here
+				#Going to need to start some coroutine here  
 				#probably return from here
 			if depth <= 2.0 and depth > 1.5:
 				#We must be submerged
 				is_submerged = true
 				hud.air_bar.visible = true;
 				underwater_overlay.visible = true;
+				camera_is_reset = false
 			elif depth >= 1.0 and depth <= 1.5:
 				is_wading = true
-				pivot.rotation = Vector3(clampf(pivot.rotation.x, -deg_to_rad(70), deg_to_rad(70)), 0, 0)
+				# pivot.rotation = Vector3(clampf(pivot.rotation.x, -deg_to_rad(70), deg_to_rad(70)), 0, 0)
 			else:
 				# These are temporary until I can put these in their own function. It exists to fix the view back from the free rotation you get from being underwater.
-				pivot.rotation = Vector3(clampf(pivot.rotation.x, -deg_to_rad(70), deg_to_rad(70)), 0, 0)
+				# pivot.rotation = Vector3(clampf(pivot.rotation.x, -deg_to_rad(70), deg_to_rad(70)), 0, 0)
 				underwater_overlay.visible = false
 				is_submerged = false
 				is_wading = false
@@ -526,6 +559,8 @@ func check_statuses():
 				is_submerged = false
 				hud.air_bar.visible = false;
 				underwater_overlay.visible = false
+				if !camera_is_reset:
+					reset_camera()
 				#print_debug("Submerge Toggle")
 
 func update_stats():
@@ -537,6 +572,8 @@ func update_stats():
 func _unhandled_key_input(event):
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
+# ---------------------------------------------------------------------------
+# Health and Damage functions
 
 func die():
 	is_alive = false;
@@ -555,26 +592,125 @@ func deal_damage(damage:float):
 	if damage <= 0:
 		print("Healing does not go here")
 		return
-	else:
-		damage_overlay.visible = true
-		if(is_flinching):
-			current_health -= damage
-			print(damage)
-			print(current_health)
-			if(current_health <= 0):
-				die()
-			damage_overlay.visible = false
-			return #Don't want stacking flinches
-		else:
-			current_health -= damage
-			print(damage)
-			print(current_health)
-			if(current_health <= 0):
-				die()
-			is_flinching = true
-			damage_flinch_coroutine(damage)
+	
+	current_health -= damage
+	print(damage)
+	print(current_health)
+	if current_health <= 0:
+		die()
+		return
+
+	if is_submerged and damage >= min_tumble_impact:
+		start_tumble(damage, damage) # Later we'll change the second parameter to be the physical force of a collision
+	elif damage >= min_flinch_damage:
+		start_flinch(damage)
+	
+# ---------------------------------------------------------------------------
+# State handling functions
+
+func handle_all_states(delta:float):
+	if is_submerged:
+		handle_tumble(delta)
+	handle_flinching(delta)
+
+func handle_tumble(delta: float):
+	if !is_tumbling:
+		return
+	if tumble_timer > 0:
+		pivot.rotate_x(sin(Time.get_ticks_msec() * tumb_rot_speed * delta))
+		pivot.rotate_y(cos(Time.get_ticks_msec() * tumb_rot_speed * delta))
+		pivot.rotate_z(sin(Time.get_ticks_msec() * tumb_rot_speed * delta))
+	elif !tumble_recover:
+		start_tumble_recov()
+
+func handle_flinching(delta: float):
+	if !is_flinching:
+		return
+	if flinch_timer > 0:
+		# Will tweak or remove
+		var flinch_intensity = sin(Time.get_ticks_msec() * flinch_rot_speed * delta)
+		pivot.rotation = init_flinch_rot + target_flinch_rot * flinch_intensity
+	elif !flinch_recover:
+		start_flinch_recov()
+	
+
+# ---------------------------------------------------------------------------
+# Functions that trigger coroutines
+
+func start_tumble_recov():
+	tumble_recover = true
+	init_tumble_rot = pivot.rotation
+	tumble_recov_coroutine()
+
+func start_tumble(_damage: float, impact_force: float):
+	if !is_submerged or is_tumbling:
+		return
+	is_tumbling = true
+	init_tumble_rot = pivot.rotation
+
+	target_tumble_rot = Vector3(randf_range(-PI, PI) * (impact_force / min_tumble_impact),
+		randf_range(-PI, PI) * (impact_force / min_tumble_impact),
+		randf_range(-PI, PI) * (impact_force / min_tumble_impact)
+	)
+
+	tumble_timer = tumb_dur
+	tumbling_coroutine()
+
+func start_flinch(damage: float):
+	if is_flinching:
+		return
+	is_flinching = true
+	init_flinch_rot = pivot.rotation
+
+	var flinch_inten = clampf(damage / min_flinch_damage, 0.0, 2.0)
+	target_flinch_rot = Vector3(randf_range(-0.2, 0.2) * flinch_inten, randf_range(-0.3, 0.3) * flinch_inten, randf_range(-0.1, 0.1) * flinch_inten)
+	flinch_timer = flinch_dur
+	damage_overlay.visible = true
+	flinching_coroutine()
+
+func start_flinch_recov():
+	flinch_recover = true
+	init_flinch_rot = pivot.rotation
+	flinch_recov_coroutine()
 
 
+# ---------------------------------------------------------------------------
+# Coroutine functions
+
+func tumbling_coroutine():
+	while tumble_timer > 0:
+		tumble_timer -= get_process_delta_time()
+		await get_tree().process_frame
+
+func flinching_coroutine():
+	while flinch_timer > 0:
+		flinch_timer -= get_process_delta_time()
+		await get_tree().process_frame
+
+func tumble_recov_coroutine():
+	var recov_time = 1.0 # make modifiable?
+	var elapsed_time = 0.0
+
+	while elapsed_time < recov_time:
+		elapsed_time += get_process_delta_time()
+		var t_ratio = elapsed_time / recov_time
+		pivot.rotation = init_tumble_rot.lerp(Vector3.ZERO, t_ratio)
+		await get_tree().process_frame
+	is_tumbling = false
+	tumble_recover = false
+
+func flinch_recov_coroutine():
+	var recov_time = 0.2
+	var elapsed_time = 0.0
+
+	while elapsed_time < recov_time:
+		elapsed_time += get_process_delta_time()
+		var t_ratio = elapsed_time / recov_time
+		pivot.rotation = init_flinch_rot.lerp(Vector3.ZERO, t_ratio)
+		await get_tree().process_frame
+	is_flinching = false
+	flinch_recover = false
+	damage_overlay.visible = false
 
 func corruption_damage_coroutine():
 	await get_tree().create_timer(corruption_wait_time).timeout
@@ -586,7 +722,6 @@ func damage_flinch_coroutine(damage):
 	is_flinching = false
 
 func draw_from_air_supply_coroutine():
-	
 	print("breathing")
 	print(hud.air_bar.value)
 	await get_tree().create_timer(draw_air_interval * draw_air_interval_modifier).timeout
@@ -595,18 +730,23 @@ func draw_from_air_supply_coroutine():
 		current_air_supply -= draw_air_amount * draw_air_amount_modifier;
 	can_call_air_subroutine = true
 
-func update_hud():
-	if hud.info_box.visible:
-		hud.x_coord_stats.text = "{0}".format([global_position.x])   
-		hud.z_coord_stats.text = "{0}".format([global_position.z])
-		hud.depth_stats.text = "{0}".format([global_position.y])
-	hud.air_bar.value = current_air_supply
+
 	
 
 #func check_zone():
 func start_up_coroutine():
 	await anim_manager.animation_finished
 	in_control = true
+
+# ---------------------------------------------------------------------------
+# UI functions
+
+func update_hud():
+	if hud.info_box.visible:
+		hud.x_coord_stats.text = "{0}".format([global_position.x])   
+		hud.z_coord_stats.text = "{0}".format([global_position.z])
+		hud.depth_stats.text = "{0}".format([global_position.y])
+	hud.air_bar.value = current_air_supply
 
 func region_update(title: String, region_type: bool):
 	print("update")
@@ -621,3 +761,20 @@ func left_region(region_type:bool):
 		hud.v_region_title.text = defaulting_location_title
 	else:
 		hud.h_region_title.text = defaulting_location_title
+
+# ---------------------------------------------------------------------------
+# misc camera functions
+func reset_camera():
+	var recov_time = 0.5
+	var elapsed_time = 0.0
+	var init_rot = pivot.rotation
+	var all_init_rot = rotation
+	while elapsed_time < recov_time:
+		elapsed_time += get_process_delta_time()
+		var t_ratio = elapsed_time / recov_time
+		pivot.rotation = init_rot.lerp(Vector3.ZERO, t_ratio)
+		rotation = all_init_rot.lerp(Vector3(0,all_init_rot.y, 0), t_ratio)
+		await get_tree().process_frame
+	pivot.rotation = Vector3.ZERO
+	rotation = Vector3(0, rotation.y, 0)
+	camera_is_reset = true

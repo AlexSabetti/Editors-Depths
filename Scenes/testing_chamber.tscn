@@ -31,10 +31,10 @@ size = Vector3(25, 0.3, 35)
 
 [sub_resource type="BoxMesh" id="BoxMesh_b4vu4"]
 material = ExtResource("1_matfq")
-size = Vector3(10, 0.3, 7)
+size = Vector3(100, 0.3, 100)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ufrhl"]
-size = Vector3(10, 0.3, 7)
+size = Vector3(100, 0.3, 100)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_iql5k"]
 radius = 75.0
@@ -60,7 +60,7 @@ mesh = SubResource("BoxMesh_bhuac")
 shape = SubResource("BoxShape3D_kg7nm")
 
 [node name="FallDamageTestPlatform" type="StaticBody3D" parent="Platforms"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30, 16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.55825, -28.954, 84.2229)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Platforms/FallDamageTestPlatform"]
 mesh = SubResource("BoxMesh_b4vu4")
