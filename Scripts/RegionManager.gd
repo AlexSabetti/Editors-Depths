@@ -17,12 +17,12 @@ func _ready():
 	signal_manager.connect("load_region", _load_region)
 	signal_manager.connect("unload_region", _unload_region)
 
-func _load_region(non_native_nodes, packed_scene_name, region_title, origin_node):
+func _load_region(non_native_nodes, packed_scene_name, region_title, origin_node: NodePath):
 	print("Grabbing mutex")
 	load_queue_mutex.lock()
 	print("got mutex")
 	# Critical Section
-	load_queue.append({"non_native_nodes": non_native_nodes, "packed_scene_name": packed_scene_name, "region_title": region_title, "origin_node": origin_node})
+	load_queue.append({"non_native_nodes": non_native_nodes, "packed_scene_name": packed_scene_name, "region_title": region_title, "origin_node"  : origin_node})
 	print("added to queue")
 	print(load_queue)
 	load_queue_mutex.unlock()
@@ -31,6 +31,8 @@ func _load_region(non_native_nodes, packed_scene_name, region_title, origin_node
 		load_thread.start(_load_region_thread)
 	else:
 		load_thread.wait_to_finish()
+		
+		load_thread.start(_load_region_thread)
 
 func _unload_region(non_native_nodes, packed_scene_name, region_title, origin_node):
 	
@@ -47,12 +49,16 @@ func _unload_region(non_native_nodes, packed_scene_name, region_title, origin_no
 		unload_thread.start(_unload_region_thread)
 	else:
 		unload_thread.wait_to_finish()
+		
+		unload_thread.start(_unload_region_thread)
 
 func _load_region_thread():
 	load_thread_active = true
 	while load_queue.size() > 0:
+		print("Load Queue size: ", load_queue.size())
 		load_queue_mutex.lock()
 		var task = load_queue.pop_front()
+		print("Removed task: ", task, " from queue")
 		load_region_data(task["non_native_nodes"], task["packed_scene_name"], task["region_title"], task["origin_node"])
 		load_queue_mutex.unlock()
 		
@@ -65,9 +71,11 @@ func _load_region_thread():
 func _unload_region_thread():
 	unload_thread_active = true
 	while unload_queue.size() > 0:
+		print("Unload Queue size: ", unload_queue.size())
 		unload_queue_mutex.lock()
 		var task = unload_queue.pop_front()
-		unload_region_data(task["non_native_nodes"], task["packed_scene_name"], task["region_title"])
+		print("Removed task: ", task, " from queue")
+		unload_region_data(task["non_native_nodes"], task["packed_scene_name"], task["region_title"], task["origin_node"])
 		unload_queue_mutex.unlock()
 		
 	print("Unload thread finished")
@@ -79,17 +87,17 @@ func load_region_data(non_native_nodes, packed_scene_name, region_title, origin_
 		var packed_scene = load(packed_scene_name)
 		if packed_scene:
 			var instance = packed_scene.instantiate()
-			origin_node.call_deferred("add_child", instance)
+			call_deferred("add_child_to_node", instance, origin_node)
 	if non_native_nodes_data:
 		var nodes = deserialize_nodes(non_native_nodes_data)
-		for n in nodes:
-			origin_node.get_child(0).call_deferred("add_child", n)
+		# for n in nodes:
+		# 	origin_node.get_child(0).call_deferred("add_child", n)
+		call_deferred("add_all_sub_nodes", nodes, origin_node)
 
-func unload_region_data(non_native_nodes, packed_scene_name, region_title):
+func unload_region_data(non_native_nodes, packed_scene_name, region_title, origin_node):
 	var non_native_nodes_data = serialize_nodes(non_native_nodes)
-
-	
-	save_to_file("res://Data/Regions/Saved_Non_Native_Nodes_" + region_title + ".json", non_native_nodes_data)
+	print("activate region helper")
+	call_deferred("finish_serialization", non_native_nodes_data, non_native_nodes, "res://Data/Regions/Saved_Non_Native_Nodes_" + region_title + ".json", origin_node)
 	
 		
 	
@@ -107,7 +115,7 @@ func serialize_node(node):
 	data["scale"] = node.scale
 	if node is Interactable:
 		data["state"] = node.get_state()
-	node.queue_free()
+	# node.queue_free()
 	return data
 
 func save_to_file(file_path, data):
@@ -143,3 +151,29 @@ func deserialize_node(data):
 		if "state" in data:  
 			node.set_state(data["state"])
 	return node
+
+func finish_serialization(serialized_data, nodes, file_path, node_path):
+	print("Finished Serializing")
+	save_to_file(file_path, serialized_data)
+	print("Finished Saving")
+	for node in nodes:
+		node.queue_free()
+	print("Finished Freeing")
+	var origin_node: UniqueRegion = get_tree().root.get_node(node_path)
+	origin_node.remove_active_scene()
+	print(origin_node.active_scene)
+	print("Finished Removing")
+
+func add_all_sub_nodes(nodes, node_path):
+	print("Adding sub nodes")
+	var origin_node: UniqueRegion = get_tree().root.get_node(node_path)
+	for n in nodes:
+		origin_node.get_node("Object_Tab").add_child(n)
+	print("Finished Adding sub nodes")
+
+func add_child_to_node(instance, node_path):
+	print("Adding child to node")
+	var origin_node: UniqueRegion = get_tree().root.get_node(node_path)
+	origin_node.add_child(instance)
+	origin_node.add_active_scene(instance)
+	print("Finished Adding child to node")

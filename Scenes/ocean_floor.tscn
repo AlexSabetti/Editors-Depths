@@ -1,15 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://brtxj5xwycjey"]
+[gd_scene load_steps=8 format=3 uid="uid://brtxj5xwycjey"]
 
 [ext_resource type="Script" path="res://addons/zylann.hterrain/hterrain.gd" id="1_d4cac"]
 [ext_resource type="Resource" path="res://Terrain/data.hterrain" id="2_qoqaf"]
 [ext_resource type="Script" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="3_hft2j"]
 [ext_resource type="Shader" path="res://addons/zylann.hterrain/shaders/array.gdshader" id="4_lph2p"]
-[ext_resource type="Script" path="res://Scripts/UniqueRegion.gd" id="4_srmjt"]
 [ext_resource type="CompressedTexture2DArray" uid="uid://dw1gj5pg4c8md" path="res://Materials/albedo_bump_array.png" id="5_3i32x"]
 [ext_resource type="CompressedTexture2DArray" uid="uid://dwvgw34j2d0w3" path="res://Materials/normal_roughness_array.png" id="6_kfp1o"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_emshb"]
-size = Vector3(0.516113, 0.167728, 0.512421)
 
 [sub_resource type="Resource" id="Resource_7lyyq"]
 script = ExtResource("3_hft2j")
@@ -17,18 +13,6 @@ mode = 1
 textures = [[ExtResource("5_3i32x")], [ExtResource("6_kfp1o")]]
 
 [node name="OceanFloor" type="Node3D"]
-
-[node name="Area3D" type="Area3D" parent="."]
-script = ExtResource("4_srmjt")
-region_title = "Ocean Floor"
-region_tie_id = 2
-is_vertical_region = true
-region_type = "Swimmable"
-is_empty = true
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1000, 0, 0, 0, 1000, 0, 0, 0, 1000, 0, 21.817, 0)
-shape = SubResource("BoxShape3D_emshb")
 
 [node name="Lights" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.49995, -173.662, 13.3918)

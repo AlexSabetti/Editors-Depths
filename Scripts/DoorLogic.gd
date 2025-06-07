@@ -4,12 +4,16 @@ extends Interactable
 @onready var door_anim_player: AnimationPlayer = $AnimationPlayer
 @export_category("States")
 @export var open: bool = false
+@export var locked: bool = false
+
 @export_category("Interact Requirements")
 @export var requirement: String
 @export var requires_item_to_unlock: bool = false
 
 func _ready():
 	door_anim_player.connect("animation_finished", finished_moving)
+	if open:
+		door_anim_player.play("activate_door")
 
 func activated(interactor: CharacterBody3D):
 	if open:
@@ -27,6 +31,8 @@ func activated(interactor: CharacterBody3D):
 							item_slot.destroy()
 							player.inventory[player.hover_on_slot] = null
 						open_door()
+			else:
+				open_door()
 
 func close_door():
 	can_interact = false
@@ -38,7 +44,7 @@ func open_door():
 	door_anim_player.play("activate_door")
 	open = true
 
-func finished_moving():
+func finished_moving(_anim_name):
 	can_interact = true
 
 func get_hover_tip() -> String:
@@ -52,3 +58,4 @@ func get_hover_tip() -> String:
 	if  not can_interact:
 		to_return = "In Use"
 	return to_return
+   

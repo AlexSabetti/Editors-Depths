@@ -100,3 +100,14 @@ func take_out(interactor:CharacterBody3D):
 # 	await interactor.anim_manager.animation_finished
 # 	interactor.changing_held_item = false
 # 	interactor.hands_in_anim = false
+
+func draw_air(interactor:CharacterBody3D, amount:float, modifier: float) -> float:
+	if interactor is PlayerMovementController:
+		if cur_capacity > 0:
+			cur_capacity -= amount * modifier
+			if cur_capacity < 0:
+				cur_capacity = 0
+			return amount * modifier
+		else:
+			return -1
+	return -1

@@ -19,6 +19,7 @@ func _physics_process(delta):
 
 			if Input.is_action_just_pressed(proper_owner.interact) and collision.can_interact:
 				# interact uses activate as its method
+				print("Interacted")
 				collision.activated(proper_owner)
 			if collision is OnGroundItem:
 				if Input.is_action_just_pressed(proper_owner.pick_up) and collision.can_interact:

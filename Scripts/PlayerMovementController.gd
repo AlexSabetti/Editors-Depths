@@ -71,6 +71,8 @@ extends CharacterBody3D
 @export var boost_multiplier: float = 1.2
 @export var underwater_friction: float = 80.0
 @export var forced_sink_multiplier: float = 10.0
+@export var roll_speed: float = 0.6
+
 
 @export_category("Health Properties")
 @export var initial_max_health: float = 100.0
@@ -93,6 +95,7 @@ extends CharacterBody3D
 @export var stun_time_modifier: float = 0.02
 
 @export_category("Inventory")
+@export_group("Hotbar")
 @export var starting_item_slot_0:Item = null
 @export var starting_item_slot_1:Item = null
 @export var starting_item_slot_2:Item = null
@@ -100,6 +103,7 @@ extends CharacterBody3D
 @export var starting_item_slot_4:Item = null
 @export var starting_item_slot_5:Item = null
 @export var starting_item_slot_6:Item = null
+@export_group("Wearables")
 @export var gas_tank_slot:GasTankItem = GasTankItem.new(1, 1000.0, 0, 0)
 
 @export_category("Tumble Settings")
@@ -127,6 +131,8 @@ var has_connected_tank:bool
 var drawing_from_mask:bool = false
 
 var hooked:bool = false
+
+@export var surrounded_by: PocketZone = null
 
 
 var frame_timer = bhop_timing_frames
@@ -216,11 +222,13 @@ func mouse_look(event):
 			else:
 				rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
 			#print(rotation)
-			pivot.rotate_x(deg_to_rad(-event.relative.y * mouse_sens))
-			if not is_submerged: 
+			
+			if not is_submerged:
+				pivot.rotate_x(deg_to_rad(-event.relative.y * mouse_sens))
 				pivot.rotation = Vector3(clampf(pivot.rotation.x, -deg_to_rad(70), deg_to_rad(70)), 0, 0)
 			else:
-				pivot.rotation = Vector3(pivot.rotation.x, 0, 0)
+				global_rotate(char_cam.global_basis.x, deg_to_rad(-event.relative.y * mouse_sens))
+				# pivot.rotation = Vector3(rotation.x, 0, 0)
 
 func get_wishdir():
 	if not movement_enabled:
@@ -292,6 +300,7 @@ func handle_movement(delta):
 	var velo
 	if is_submerged and !is_drowning:
 		velo = get_swimming_vel()
+		# handle_rolling(delta)
 	elif !is_submerged:
 		velo = get_next_vel(velocity, delta)
 	elif is_drowning:
@@ -426,6 +435,7 @@ func  _physics_process(delta):
 	if is_alive and !is_drowning:
 		handle_all_states(delta)
 		handle_movement(delta)
+		handle_rolling(delta)
 		handle_hotbar_2()
 		misc_actions()
 	draw_debug()
@@ -459,6 +469,8 @@ func _ready():
 		start_up_coroutine()
 	else:
 		in_control = true;
+	if gas_tank_slot != null:
+		drawing_from_mask = true
 	update_mouse_mode()
 
 # func get_swinging_vel(manager:KineticRifle, vel_comp):
@@ -470,6 +482,8 @@ func _ready():
 
 func get_swimming_vel():
 	var swim_vec = Vector3(0,0,0)
+	# print("Body Rotation: ", rotation)
+	# print("Pivot Rotation: ", pivot.rotation)
 	#Coordinate movement is based on mouse position, rather than standard horizontal locked movement
 
 	#var swim_movement = Input.get_vector("left", "right", "forwards", "backwards")
@@ -478,25 +492,26 @@ func get_swimming_vel():
 		swim_vec += -char_cam.global_transform.basis.z
 	if Input.is_action_pressed(move_backward):
 		swim_vec += char_cam.global_transform.basis.z
-	if Input.is_action_pressed(move_left):
+	if Input.is_action_pressed(move_left) and !Input.is_action_pressed("maneuver"):
 		swim_vec += -char_cam.global_transform.basis.x
-	if Input.is_action_pressed(move_right):
+	if Input.is_action_pressed(move_right) and !Input.is_action_pressed("maneuver"):
 		swim_vec += char_cam.global_transform.basis.x
 	
+	# -----------------------------------------------------------------------------------------------------
 	#if Input.is_action_just_pressed("jump") && can_boost:
 		#movement_mod *= boost_multiplier
 		#can_boost = false
 		#boost_swimming_coroutine()
 		#print_debug("Boosting")
-	if Input.is_action_pressed("crouch"):
-		movement_mod *= Vector3(0.2, forced_sink_multiplier, 0.2)  
-		swim_vec += -Vector3(0,1,0)
-	if Input.is_action_pressed(jump):
-		movement_mod *= Vector3(0.2, forced_sink_multiplier, 0.2)
-		swim_vec += Vector3(0,1,0)
-		
-
+	# if Input.is_action_pressed("crouch"):
+	# 	movement_mod *= Vector3(0.2, forced_sink_multiplier, 0.2)  
+	# 	swim_vec += -Vector3(0,1,0)
+	# if Input.is_action_pressed(jump):
+	# 	movement_mod *= Vector3(0.2, forced_sink_multiplier, 0.2)
+	# 	swim_vec += Vector3(0,1,0)
 	#movement_dir = (transform.basis * Vector3(swim_movement.x, swim_vec.y, swim_movement.y).normalized())
+	# ------------------------------------------------------------------------------------------------------
+	
 	movement_dir = (Vector3(swim_vec.x, swim_vec.y, swim_vec.z).normalized())
 	#print("move-dir:")
 	#print(movement_dir)
@@ -567,11 +582,35 @@ func update_stats():
 	if is_submerged and can_call_air_subroutine and !is_drowning:
 		print("got here")
 		can_call_air_subroutine = false
-		draw_from_air_supply_coroutine()
+		if drawing_from_mask:
+			draw_from_air_supply_coroutine()
+		else:
+			draw_from_lungs_coroutine()
+	elif !is_submerged and can_call_air_subroutine and surrounded_by != null and !surrounded_by.breathable:
+		can_call_air_subroutine = false
+		if drawing_from_mask:
+			draw_from_air_supply_coroutine()
+		else:
+			draw_from_lungs_coroutine()
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
+
+func draw_air(amount: float, modifier: float):
+	if current_air_supply <= 0.0:
+		is_drowning = true
+		return
+	if is_drowning:
+		return
+	current_air_supply -= amount * modifier
+	if current_air_supply <= 0.0:
+		current_air_supply = 0.0
+	return
+func add_air(amount: float):
+	current_air_supply += amount
+	if current_air_supply > base_air_supply:
+		current_air_supply = base_air_supply
 # ---------------------------------------------------------------------------
 # Health and Damage functions
 
@@ -620,7 +659,7 @@ func handle_tumble(delta: float):
 		pivot.rotate_x(sin(Time.get_ticks_msec() * tumb_rot_speed * delta))
 		pivot.rotate_y(cos(Time.get_ticks_msec() * tumb_rot_speed * delta))
 		pivot.rotate_z(sin(Time.get_ticks_msec() * tumb_rot_speed * delta))
-	elif !tumble_recover:
+	elif !tumble_recover:  
 		start_tumble_recov()
 
 func handle_flinching(delta: float):
@@ -632,14 +671,22 @@ func handle_flinching(delta: float):
 		pivot.rotation = init_flinch_rot + target_flinch_rot * flinch_intensity
 	elif !flinch_recover:
 		start_flinch_recov()
-	
+
+func handle_rolling(delta: float):
+	if is_submerged and in_control and !is_tumbling:
+		var ctrl = Input.is_action_pressed("maneuver")
+		if ctrl:
+			if Input.is_action_pressed(move_left):
+				global_rotate(char_cam.global_basis.z, roll_speed * delta)
+			if Input.is_action_pressed(move_right):
+				global_rotate(char_cam.global_basis.z, -roll_speed * delta)
 
 # ---------------------------------------------------------------------------
 # Functions that trigger coroutines
 
 func start_tumble_recov():
 	tumble_recover = true
-	init_tumble_rot = pivot.rotation
+	init_tumble_rot = rotation
 	tumble_recov_coroutine()
 
 func start_tumble(_damage: float, impact_force: float):
@@ -694,7 +741,7 @@ func tumble_recov_coroutine():
 	while elapsed_time < recov_time:
 		elapsed_time += get_process_delta_time()
 		var t_ratio = elapsed_time / recov_time
-		pivot.rotation = init_tumble_rot.lerp(Vector3.ZERO, t_ratio)
+		rotation = init_tumble_rot.lerp(Vector3.ZERO, t_ratio)
 		await get_tree().process_frame
 	is_tumbling = false
 	tumble_recover = false
@@ -722,12 +769,24 @@ func damage_flinch_coroutine(damage):
 	is_flinching = false
 
 func draw_from_air_supply_coroutine():
-	print("breathing")
+	print("breathing from external tank")
 	print(hud.air_bar.value)
 	await get_tree().create_timer(draw_air_interval * draw_air_interval_modifier).timeout
 	#Check if we're still submerged, and if true, breath
-	if is_submerged:
-		current_air_supply -= draw_air_amount * draw_air_amount_modifier;
+	if drawing_from_mask:
+		var result = gas_tank_slot.draw_air(self, draw_air_amount, draw_air_amount_modifier)
+		if result == -1:
+			print("Tank is empty, using lungs")
+			draw_from_lungs_coroutine()
+		else:
+			print("Tank has air, using tank")
+			add_air(result)
+	can_call_air_subroutine = true
+
+func draw_from_lungs_coroutine():
+	print("breathing from lungs")
+	await get_tree().create_timer(draw_air_interval * draw_air_interval_modifier).timeout
+	draw_air(draw_air_amount, draw_air_amount_modifier)
 	can_call_air_subroutine = true
 
 

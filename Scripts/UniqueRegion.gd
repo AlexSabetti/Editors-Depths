@@ -34,9 +34,11 @@ func _ready():
 
 func on_enter_far(entity):
 	if entity is PlayerMovementController:
-		signal_manager.emit_signal("load_region", non_native_nodes, packed_scene_name, region_title, self)
+		print("--")
+		print(get_path())
+		signal_manager.emit_signal("load_region", non_native_nodes, packed_scene_name, region_title, get_path())
 		print(active_scene)
-		active_scene = get_child(get_child_count() - 1)
+		
 		print("Player has entered, now loading...")
 
 func on_enter_near(entity):
@@ -51,6 +53,8 @@ func on_exit_near(entity):
 		
 func on_exit_far(entity):
 	if entity is PlayerMovementController:
+		print("--")
+		print(self)
 		packed_scene_name = displayed_scene.resource_path
 		print(packed_scene_name)
 		
@@ -69,6 +73,17 @@ func on_exit_far(entity):
 
 
 		print(get_children())
-		signal_manager.call_deferred("emit_signal", "unload_region", non_native_nodes, packed_scene_name, region_title, active_scene)
-		active_scene.queue_free()
+		signal_manager.call_deferred("emit_signal", "unload_region", non_native_nodes, packed_scene_name, region_title, get_path())
 		print("exited")
+
+func add_active_scene(scene):
+	active_scene = scene
+	print("active scene added")
+
+func remove_active_scene():
+	if active_scene:
+		active_scene.queue_free()
+		active_scene = null
+		print("Active scene removed")
+	else:
+		print("No active scene to remove")

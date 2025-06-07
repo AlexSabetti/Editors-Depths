@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bj8fgooai4gcc"]
+[gd_scene load_steps=19 format=3 uid="uid://bj8fgooai4gcc"]
 
 [ext_resource type="PackedScene" uid="uid://4b87ljefy1vi" path="res://Scenes/player.tscn" id="1_06l10"]
 [ext_resource type="Material" uid="uid://ccu6ku8u0q3ei" path="res://Materials/TestingFloorMaterial.tres" id="1_matfq"]
@@ -6,7 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://o6ql13q0ncv3" path="res://Scenes/GasCanister.tscn" id="4_g8yal"]
 [ext_resource type="Script" path="res://Scripts/RegionManager.gd" id="5_4jk5h"]
 [ext_resource type="Script" path="res://Scripts/UniqueRegion.gd" id="6_hc8cd"]
-[ext_resource type="PackedScene" uid="uid://bauph0kprgjpi" path="res://TestScene.tscn" id="7_p1x2g"]
+[ext_resource type="PackedScene" uid="uid://hawqmosde3es" path="res://Scenes/planet_install_a.tscn" id="7_fkgkt"]
+[ext_resource type="Script" path="res://Scripts/RegionAreaHelper.gd" id="8_yiatb"]
+[ext_resource type="PackedScene" uid="uid://drwsd4yolayia" path="res://Scenes/Test-hatch.tscn" id="9_ensha"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_owc8k"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -53,10 +55,11 @@ environment = SubResource("Environment_8mpia")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0.19735)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Platforms/Main Platform"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.40303)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 mesh = SubResource("BoxMesh_bhuac")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Platforms/Main Platform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 shape = SubResource("BoxShape3D_kg7nm")
 
 [node name="FallDamageTestPlatform" type="StaticBody3D" parent="Platforms"]
@@ -91,11 +94,13 @@ script = ExtResource("5_4jk5h")
 [node name="Zone" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.4081, 84.617)
 script = ExtResource("6_hc8cd")
-displayed_scene = ExtResource("7_p1x2g")
+region_type = "Swimmable"
+displayed_scene = ExtResource("7_fkgkt")
 
 [node name="ObjectTab" type="Node3D" parent="Zone"]
 
 [node name="LoadArea" type="Area3D" parent="Zone"]
+script = ExtResource("8_yiatb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Zone/LoadArea"]
 shape = SubResource("SphereShape3D_iql5k")
@@ -104,3 +109,6 @@ shape = SubResource("SphereShape3D_iql5k")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Zone/RegionArea"]
 shape = SubResource("SphereShape3D_0bti0")
+
+[node name="Node3D2" parent="." instance=ExtResource("9_ensha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3432, 17.7859)
