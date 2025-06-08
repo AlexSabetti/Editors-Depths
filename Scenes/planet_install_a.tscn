@@ -12,6 +12,8 @@ radius = 20.0
 
 [node name="Area3D" type="Area3D" parent="." index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.07291, 0)
+collision_layer = 16
+collision_mask = 2
 script = ExtResource("3_gg0cd")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
@@ -22,6 +24,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49373, -27.8724)
 door_a_open = true
 type_beyond_door_a = "Liquid"
 modifiers_beyond_door_a = Array[String](["clear_water"])
+modifiers_beyond_door_b = Array[String](["breathable"])
 
 [node name="CollisionShape3D" parent="AirLock/TransitionFillArea" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.34878)

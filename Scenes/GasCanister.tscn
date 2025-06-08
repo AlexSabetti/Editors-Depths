@@ -8,6 +8,7 @@ points = PackedVector3Array(-0.358853, 0.175317, 0.0418879, -0.358853, 0.175317,
 
 [node name="GasCanister" type="RigidBody3D"]
 collision_layer = 9
+collision_mask = 19
 script = ExtResource("1_p8l3x")
 interact_prompt = "interact"
 

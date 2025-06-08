@@ -24,7 +24,6 @@ func _process(_delta):
 				#print("Pocket detected, out of liquid")
 				body.in_liquid = false
 				pocket_zone_override = true
-				break
 			else:
 				#print("In liquid")
 				body.in_liquid = true
@@ -45,6 +44,7 @@ func _process(_delta):
 			pocket_zone_override = false
 			body.surrounded_by = null
 		counter += 1;
+	print(counter, " bodies detected in depth check")
 	if pocket_zone_override:
 		depth = to_local(depth_detector.get_collision_point()).y
 		if !depth_detector.is_colliding():

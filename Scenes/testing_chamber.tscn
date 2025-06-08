@@ -100,12 +100,16 @@ displayed_scene = ExtResource("7_fkgkt")
 [node name="ObjectTab" type="Node3D" parent="Zone"]
 
 [node name="LoadArea" type="Area3D" parent="Zone"]
+collision_layer = 0
+collision_mask = 2
 script = ExtResource("8_yiatb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Zone/LoadArea"]
 shape = SubResource("SphereShape3D_iql5k")
 
 [node name="RegionArea" type="Area3D" parent="Zone"]
+collision_layer = 16
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Zone/RegionArea"]
 shape = SubResource("SphereShape3D_0bti0")

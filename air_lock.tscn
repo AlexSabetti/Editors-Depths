@@ -1,8 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://dcm36e5xwlacd"]
+[gd_scene load_steps=15 format=3 uid="uid://dcm36e5xwlacd"]
 
 [ext_resource type="Script" path="res://Scripts/Air_lock.gd" id="1_5wlbt"]
 [ext_resource type="Script" path="res://Scripts/Air_lock_door.gd" id="2_is0bx"]
 [ext_resource type="Script" path="res://Scripts/PocketZone.gd" id="3_yagqn"]
+[ext_resource type="PackedScene" uid="uid://cp5f5owd0x1dr" path="res://Scenes/Water_Plane.tscn" id="4_rxiap"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_e76vw"]
 size = Vector3(3, 3, 0.15)
@@ -32,16 +33,6 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 8, 0.5, 1, 0, 3.1, 8)
 
-[sub_resource type="Animation" id="Animation_ui4e8"]
-resource_name = "open_door_a"
-tracks/0/type = "position_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("DoorA")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 0, 3.1, 0)
-
 [sub_resource type="Animation" id="Animation_rcrhm"]
 resource_name = "open_door_b"
 tracks/0/type = "position_3d"
@@ -51,6 +42,16 @@ tracks/0/path = NodePath("DoorB")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 8, 1, 1, 0, 3.1, 8)
+
+[sub_resource type="Animation" id="Animation_ui4e8"]
+resource_name = "open_door_a"
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DoorA")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 0, 3.1, 0)
 
 [sub_resource type="Animation" id="Animation_jkajp"]
 length = 0.001
@@ -73,8 +74,8 @@ tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 8)
 _data = {
 &"prepare_door_a": SubResource("Animation_rgkog"),
 &"prepare_door_b": SubResource("Animation_h53vs"),
-&"open_door_b": SubResource("Animation_rcrhm"),
 &"open_door_a": SubResource("Animation_ui4e8"),
+&"open_door_b": SubResource("Animation_rcrhm"),
 &"RESET": SubResource("Animation_jkajp")
 }
 
@@ -89,6 +90,7 @@ script = ExtResource("1_5wlbt")
 
 [node name="DoorA" type="StaticBody3D" parent="."]
 collision_layer = 9
+collision_mask = 9
 script = ExtResource("2_is0bx")
 object_name = "Airlock"
 
@@ -101,6 +103,7 @@ mesh = SubResource("BoxMesh_3nwai")
 [node name="DoorB" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
 collision_layer = 9
+collision_mask = 9
 script = ExtResource("2_is0bx")
 object_name = "Airlock"
 
@@ -117,13 +120,20 @@ libraries = {
 
 [node name="ActivationArea" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+collision_layer = 64
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ActivationArea"]
 shape = SubResource("BoxShape3D_a3ii7")
 
 [node name="TransitionFillArea" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+collision_layer = 16
+collision_mask = 2
 script = ExtResource("3_yagqn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TransitionFillArea"]
 shape = SubResource("BoxShape3D_27hus")
+
+[node name="Node3D" parent="." instance=ExtResource("4_rxiap")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.604, 3.8637)

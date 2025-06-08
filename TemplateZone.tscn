@@ -13,12 +13,16 @@ script = ExtResource("1_8qasc")
 [node name="ObjectTab" type="Node3D" parent="."]
 
 [node name="LoadArea" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 2
 script = ExtResource("2_rvvof")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="LoadArea"]
 shape = SubResource("SphereShape3D_uyphr")
 
 [node name="RegionArea" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RegionArea"]
 shape = SubResource("SphereShape3D_ubvso")

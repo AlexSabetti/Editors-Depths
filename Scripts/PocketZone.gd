@@ -27,7 +27,6 @@ extends Area3D
 @export var locked_in_place: bool = true
 @export var collider_size: Vector3 = Vector3(-1, -1, -1)
 #Perhaps impliment a particle system?
-
 func _get_property_list():
 	var list = []
 	if is_gas:
@@ -53,7 +52,11 @@ func _ready():
 		collider.shape.extents = collider_size
 
 func set_type(type: String, modifiers: Array[String]):
+	print("Modifiers: ", modifiers)
 	if type == "Gas":
+		set_collision_layer_value(5, false)
+		set_collision_layer_value(6, true)
+
 		is_gas = true
 		breathable = "breathable" in modifiers
 		caustic = "caustic" in modifiers
@@ -61,9 +64,25 @@ func set_type(type: String, modifiers: Array[String]):
 		corrosive = "corrosive" in modifiers
 		suppressing = "suppressing" in modifiers
 	elif type == "Liquid":
+		set_collision_layer_value(6, false)
+		set_collision_layer_value(5, true)
 		is_gas = false
 		clear_water = "clear_water" in modifiers
 		cloud_water = "cloud_water" in modifiers
 		corrupt = "corrupt" in modifiers
 		acidic = "acidic" in modifiers
+	debug_print()
 
+func debug_print():
+	print("Pocket Zone Type:" + (" Gas" if is_gas else " Liquid"))
+	if is_gas:
+		print("Breathable: " + str(breathable))
+		print("Caustic: " + str(caustic))
+		print("Explosive: " + str(explosive))
+		print("Corrosive: " + str(corrosive))
+		print("Suppressing: " + str(suppressing))
+	else:
+		print("Clear Water: " + str(clear_water))
+		print("Cloud Water: " + str(cloud_water))
+		print("Corrupt: " + str(corrupt))
+		print("Acidic: " + str(acidic))

@@ -37,6 +37,9 @@ extends Node3D
 @export_group("Pairings")
 @export var paired_button: Interactable
 var active: bool = false
+@export_group("Transition Zone")
+@export var cur_modifiers: Array[String] = []
+@export_enum("Gas", "Liquid") var cur_type: String = "Gas" 
 
 var sealing: bool = false
 var signal_manager = VoidScreamers
@@ -87,6 +90,8 @@ func activate_sequence(door_to_open: Interactable):
 	door_to_open.can_interact = false
 
 func start_sequence(body):
+	if active: 
+		return
 	if body is CharacterBody3D:
 		sealing = true
 		active = true
@@ -96,7 +101,7 @@ func start_sequence(body):
 			door_a_open = false
 			await get_tree().create_timer(sealing_time).timeout
 			var wait_timer: SceneTreeTimer = get_tree().create_timer(pressurizer_wait_time)
-			transition_fill_area.set_type(type_beyond_door_a, modifiers_beyond_door_a)
+			transition_fill_area.set_type(type_beyond_door_b, modifiers_beyond_door_b)
 			while wait_timer.time_left > 0:
 				await wait_timer.timeout
 			await get_tree().create_timer(unsealing_time).timeout
@@ -105,14 +110,15 @@ func start_sequence(body):
 			door_b_open = true
 			door_a.can_interact = true
 			sealing = false
+			active = false
 		elif door_b_open:
 			door_anim_player.play_backwards("open_door_b")
 			await door_anim_player.animation_finished
 			door_b_open = false
 			await get_tree().create_timer(sealing_time).timeout
 			var wait_timer: SceneTreeTimer = get_tree().create_timer(pressurizer_wait_time)
-			transition_fill_area.set_type(type_beyond_door_b, modifiers_beyond_door_b)
-			print(transition_fill_area.
+			transition_fill_area.set_type(type_beyond_door_a, modifiers_beyond_door_a)
+			
 			while wait_timer.time_left > 0:
 				await wait_timer.timeout
 			await get_tree().create_timer(unsealing_time).timeout
@@ -121,6 +127,7 @@ func start_sequence(body):
 			door_a_open = true
 			door_b.can_interact = true
 			sealing = false
+			active = false
 	
 
 
