@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bj8fgooai4gcc"]
+[gd_scene load_steps=22 format=3 uid="uid://bj8fgooai4gcc"]
 
 [ext_resource type="PackedScene" uid="uid://4b87ljefy1vi" path="res://Scenes/player.tscn" id="1_06l10"]
 [ext_resource type="Material" uid="uid://ccu6ku8u0q3ei" path="res://Materials/TestingFloorMaterial.tres" id="1_matfq"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://hawqmosde3es" path="res://Scenes/planet_install_a.tscn" id="7_fkgkt"]
 [ext_resource type="Script" path="res://Scripts/RegionAreaHelper.gd" id="8_yiatb"]
 [ext_resource type="PackedScene" uid="uid://drwsd4yolayia" path="res://Scenes/Test-hatch.tscn" id="9_ensha"]
+[ext_resource type="PackedScene" uid="uid://ci7j3lnge34kl" path="res://landmine.tscn" id="10_qeshg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_owc8k"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -44,12 +45,30 @@ radius = 75.0
 [sub_resource type="SphereShape3D" id="SphereShape3D_0bti0"]
 radius = 70.0
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_st31o"]
+radius = 23.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3hfg4"]
+radius = 23.0
+
 [node name="TestingChamber" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_8mpia")
 
 [node name="Platforms" type="Node3D" parent="."]
+
+[node name="Main Platform2" type="StaticBody3D" parent="Platforms"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.0554, -0.736691, 0.3947)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Platforms/Main Platform2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+mesh = SubResource("BoxMesh_bhuac")
+skeleton = NodePath("../../Main Platform2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platforms/Main Platform2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+shape = SubResource("BoxShape3D_kg7nm")
 
 [node name="Main Platform" type="StaticBody3D" parent="Platforms"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0.19735)
@@ -116,3 +135,32 @@ shape = SubResource("SphereShape3D_0bti0")
 
 [node name="Node3D2" parent="." instance=ExtResource("9_ensha")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3432, 17.7859)
+
+[node name="Zone2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.426, 2.56756, 0)
+script = ExtResource("6_hc8cd")
+is_empty = true
+
+[node name="ObjectTab" type="Node3D" parent="Zone2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.346628)
+
+[node name="Landmine" parent="Zone2/ObjectTab" instance=ExtResource("10_qeshg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5992, -3.08469, 13.1443)
+
+[node name="Landmine2" parent="Zone2/ObjectTab" instance=ExtResource("10_qeshg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5992, -3.08469, 13.1443)
+
+[node name="Landmine3" parent="Zone2/ObjectTab" instance=ExtResource("10_qeshg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5992, -3.08469, 9.14432)
+
+[node name="LoadArea" type="Area3D" parent="Zone2"]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Zone2/LoadArea"]
+shape = SubResource("SphereShape3D_st31o")
+
+[node name="RegionArea" type="Area3D" parent="Zone2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Zone2/RegionArea"]
+shape = SubResource("SphereShape3D_3hfg4")

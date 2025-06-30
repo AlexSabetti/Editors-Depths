@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cjyh7cbx221mk"]
+
+[ext_resource type="Script" path="res://Scripts/explosion.gd" id="1_3uhe2"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_j3jid"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_gdrvc"]
+
+[node name="explosion" type="Area3D"]
+collision_mask = 15
+script = ExtResource("1_3uhe2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_j3jid")
+
+[node name="Debug_Area" type="MeshInstance3D" parent="."]
+visible = false
+transparency = 0.5
+mesh = SubResource("SphereMesh_gdrvc")

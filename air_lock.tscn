@@ -33,16 +33,6 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 8, 0.5, 1, 0, 3.1, 8)
 
-[sub_resource type="Animation" id="Animation_rcrhm"]
-resource_name = "open_door_b"
-tracks/0/type = "position_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("DoorB")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 8, 1, 1, 0, 3.1, 8)
-
 [sub_resource type="Animation" id="Animation_ui4e8"]
 resource_name = "open_door_a"
 tracks/0/type = "position_3d"
@@ -52,6 +42,16 @@ tracks/0/path = NodePath("DoorA")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 0, 3.1, 0)
+
+[sub_resource type="Animation" id="Animation_rcrhm"]
+resource_name = "open_door_b"
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DoorB")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 8, 1, 1, 0, 3.1, 8)
 
 [sub_resource type="Animation" id="Animation_jkajp"]
 length = 0.001
@@ -72,11 +72,11 @@ tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 8)
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_m6c4j"]
 _data = {
+&"RESET": SubResource("Animation_jkajp"),
 &"prepare_door_a": SubResource("Animation_rgkog"),
 &"prepare_door_b": SubResource("Animation_h53vs"),
 &"open_door_a": SubResource("Animation_ui4e8"),
-&"open_door_b": SubResource("Animation_rcrhm"),
-&"RESET": SubResource("Animation_jkajp")
+&"open_door_b": SubResource("Animation_rcrhm")
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a3ii7"]

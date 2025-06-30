@@ -31,10 +31,10 @@ func _physics_process(delta):
 		what_am_i_looking_at.text = ""
 
 func pickup(collision:OnGroundItem):
-	if proper_owner.inventory[proper_owner.hover_on_slot] == null:
+	if proper_owner.hotbar[proper_owner.hover_on_slot] == null:
 
-			proper_owner.inventory[proper_owner.hover_on_slot] = collision.send_inv_form()
-			proper_owner.hud.add_item_slot_texture(proper_owner.inventory[proper_owner.hover_on_slot].item_id, proper_owner.hover_on_slot)
+			proper_owner.hotbar[proper_owner.hover_on_slot] = collision.send_inv_form()
+			proper_owner.hud.add_item_slot_texture(proper_owner.hotbar[proper_owner.hover_on_slot].item_id, proper_owner.hover_on_slot)
 			proper_owner.refresh_holding_2()
 			# proper_owner.currently_holding = proper_owner.inventory[proper_owner.hover_on_slot]
 			# print(proper_owner.currently_holding)

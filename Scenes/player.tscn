@@ -42,9 +42,6 @@ height = 0.2
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_px2yg"]
 radius = 0.1
 
-[sub_resource type="Animation" id="Animation_h5hgf"]
-resource_name = "drowning"
-
 [sub_resource type="Animation" id="Animation_t2df4"]
 resource_name = "LightVerticalObjectTakeOut"
 length = 0.3
@@ -55,17 +52,6 @@ tracks/0/path = NodePath("Pivot/Eyes/SmallItemShowNode")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0.666, -0.898456, -0.6, 0.3, 1, 0.666, -0.287, -0.6)
-
-[sub_resource type="Animation" id="Animation_0wc1m"]
-resource_name = "LightVerticalObjectPutAway"
-length = 0.3
-tracks/0/type = "position_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Pivot/Eyes/SmallItemShowNode")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0.666, -0.287, -0.6, 0.3, 1, 0.666, -0.746, -0.6)
 
 [sub_resource type="Animation" id="Animation_urhp1"]
 resource_name = "TwoHandedObjectTakeOut"
@@ -78,6 +64,9 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0, -0.8, -0.6, 0.5, 1, 0, -0.3, -0.6)
 
+[sub_resource type="Animation" id="Animation_h5hgf"]
+resource_name = "drowning"
+
 [sub_resource type="Animation" id="Animation_ufwg6"]
 resource_name = "TwoHandedObjectPutAway"
 length = 0.5
@@ -88,6 +77,17 @@ tracks/0/path = NodePath("Pivot/Eyes/TwoHandItemShowNode")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0, -0.3, -0.6, 0.5, 1, 0, -0.8, -0.6)
+
+[sub_resource type="Animation" id="Animation_0wc1m"]
+resource_name = "LightVerticalObjectPutAway"
+length = 0.3
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pivot/Eyes/SmallItemShowNode")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.666, -0.287, -0.6, 0.3, 1, 0.666, -0.746, -0.6)
 
 [sub_resource type="Animation" id="Animation_md42b"]
 resource_name = "start_up"
@@ -111,10 +111,10 @@ tracks/1/keys = PackedFloat32Array(0, 1, -0.290711, 0, 0, 0.956811, 0.3, 1, -0.2
 _data = {
 &"start_up": SubResource("Animation_md42b"),
 &"drowning": SubResource("Animation_h5hgf"),
-&"LightVerticalObjectPutAway": SubResource("Animation_0wc1m"),
 &"LightVerticalObjectTakeOut": SubResource("Animation_t2df4"),
+&"TwoHandedObjectTakeOut": SubResource("Animation_urhp1"),
 &"TwoHandedObjectPutAway": SubResource("Animation_ufwg6"),
-&"TwoHandedObjectTakeOut": SubResource("Animation_urhp1")
+&"LightVerticalObjectPutAway": SubResource("Animation_0wc1m")
 }
 
 [node name="Player" type="CharacterBody3D"]

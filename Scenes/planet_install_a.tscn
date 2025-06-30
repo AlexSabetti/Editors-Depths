@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://hawqmosde3es"]
+[gd_scene load_steps=6 format=3 uid="uid://hawqmosde3es"]
 
 [ext_resource type="PackedScene" uid="uid://dgxh1rc5uettj" path="res://Blend Files/Planet_Install_A.glb" id="1_c8qp3"]
 [ext_resource type="Script" path="res://Scripts/PocketZone.gd" id="3_gg0cd"]
 [ext_resource type="PackedScene" uid="uid://dcm36e5xwlacd" path="res://air_lock.tscn" id="3_umd0c"]
+[ext_resource type="PackedScene" uid="uid://ci7j3lnge34kl" path="res://landmine.tscn" id="4_cs3c8"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_p31sh"]
 height = 20.0
@@ -28,5 +29,13 @@ modifiers_beyond_door_b = Array[String](["breathable"])
 
 [node name="CollisionShape3D" parent="AirLock/TransitionFillArea" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.34878)
+
+[node name="Landmine2" parent="." index="3" instance=ExtResource("4_cs3c8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.0221982, 0)
+damage = 40.0
+knockback_dir = Vector3(0, 8, 0)
+
+[node name="Landmine" parent="." index="4" instance=ExtResource("4_cs3c8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.0110991, 0)
 
 [editable path="AirLock"]

@@ -1,5 +1,5 @@
 class_name PlayerMovementController
-extends CharacterBody3D
+extends entity
 
 ####
 # The majority of the physics related movement code (Not the swimming code, that is my own)
@@ -94,7 +94,7 @@ extends CharacterBody3D
 @export_category("Status Properties")
 @export var stun_time_modifier: float = 0.02
 
-@export_category("Inventory")
+@export_category("hotbar")
 @export_group("Hotbar")
 @export var starting_item_slot_0:Item = null
 @export var starting_item_slot_1:Item = null
@@ -118,7 +118,7 @@ extends CharacterBody3D
 @export var flinch_rot_speed: float = 1.0
 @export var flinch_recov_speed: float = 0.8
 
-var inventory: Array[Item] = [null, null, null, null, null, null, null]
+var hotbar: Array[Item] = [null, null, null, null, null, null, null]
 var hover_on_slot:int = 0
 var currently_holding:Item
 #Technically this makes it so the length is 7
@@ -179,7 +179,7 @@ var is_in_knockback: bool = false
 var current_health: float
 var current_air_supply: float
 var can_call_air_subroutine: bool = true
-var defaulting_location_title:String = "Ocean"
+var defaulting_location_title: String = "Ocean"
 var corruption: float = 0
 var can_deal_corrupt_damage: bool = true
 var vel = Vector3()
@@ -187,13 +187,20 @@ var movement_mod = Vector3(1,1,1)
 var movement = Vector2()
 var movement_dir = Vector3()
 
+var is_paused: bool = false
+var inv_open: bool = false
+
 var hands_in_anim = false
 #Signal Bus
 var signal_manager = VoidScreamers
 
 func update_mouse_mode():
-	if in_control and char_cam:
+	if in_control and char_cam and !is_paused and !inv_open:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	elif is_paused:
+		Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	elif inv_open:
+		Input.mouse_mode = Input.MOUSE_MODE_CONFINED
 	else:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -201,21 +208,28 @@ func misc_actions():
 	if Input.is_action_just_pressed("toggle_light"):
 		search_light.visible = !search_light.visible
 	if Input.is_action_just_pressed("drop") and !changing_held_item:
-		if inventory[hover_on_slot] != null:
+		if hotbar[hover_on_slot] != null:
 			drop_item()
 
 func drop_item():
-		var dropped_scene = load(inventory[hover_on_slot].scene_link)
+		var dropped_scene = load(hotbar[hover_on_slot].scene_link)
 		var instance = dropped_scene.instantiate()
-		instance.load_payload(inventory[hover_on_slot])
+		instance.load_payload(hotbar[hover_on_slot])
 		instance.position = drop_local.global_position
 		#instance.linear_velocity = player.glo
 		get_node("/root/TestingChamber").add_child(instance)
-		inventory[hover_on_slot] = null
+		hotbar[hover_on_slot] = null
+		hud.remove_item_from_slot(hover_on_slot)
 		refresh_holding_2()
 
+func update_hotbar(slot):
+	if hud.hotbar_box.get_child(slot).item == null:
+		hotbar[slot] = null
+	else:
+		hotbar[slot] = hud.hotbar_box.get_child(slot).item
+
 func mouse_look(event):
-	if in_control and char_cam:
+	if in_control and not inv_open and char_cam:
 		if event is InputEventMouseMotion and not is_tumbling:
 			if is_submerged:
 				global_rotate(char_cam.global_basis.y, deg_to_rad(-event.relative.x * mouse_sens))
@@ -234,6 +248,8 @@ func get_wishdir():
 	if not movement_enabled:
 		return Vector3.ZERO
 	if not in_control:
+		return Vector3.ZERO
+	if not is_alive:
 		return Vector3.ZERO
 	return Vector3.ZERO + (transform.basis.z * Input.get_axis(move_forward, move_backward)) + (transform.basis.x * Input.get_axis(move_left, move_right))
 
@@ -283,9 +299,9 @@ func get_next_vel(prev_vel, delta):
 		accel = air_acc
 	var velo = accelerate(get_wishdir(), prev_vel, accel, max_vel, delta)
 	velo += Vector3.DOWN * get_grav(delta)
-
-	if(Input.is_action_pressed(jump) if jump_when_held else Input.is_action_just_pressed(jump) and movement_enabled and can_jump):
-		velo.y = get_jump()
+	if is_alive:
+		if(Input.is_action_pressed(jump) if jump_when_held else Input.is_action_just_pressed(jump) and movement_enabled and can_jump):
+			velo.y = get_jump()
 	vel = velo
 	return velo;
 
@@ -331,21 +347,21 @@ func handle_hotbar_2():
 	if prev_hover_on != hover_on_slot:
 		handle_changing_2()
 	else:
-		if Input.is_action_pressed(left_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
+		if Input.is_action_pressed(left_click_use) and hotbar[hover_on_slot] != null and changing_held_item != true:
 			#can_scroll_hotbar = false
-			inventory[hover_on_slot].use(self)
-		if Input.is_action_pressed(right_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
+			hotbar[hover_on_slot].use(self)
+		if Input.is_action_pressed(right_click_use) and hotbar[hover_on_slot] != null and changing_held_item != true:
 			#can_scroll_hotbar = false
-			inventory[hover_on_slot].secondary_use(self)
+			hotbar[hover_on_slot].secondary_use(self)
 
 func handle_changing_2():
-	if inventory[hover_on_slot] != null:	
+	if hotbar[hover_on_slot] != null:	
 		#if anim_manager.is_playing():
 			#anim_manager.stop(false)
-			#anim_manager.play(inventory[hover_on_slot].take_out_anim_name)
+			#anim_manager.play(hotbar[hover_on_slot].take_out_anim_name)
 		anim_manager.stop(false)
-		anim_manager.play(inventory[hover_on_slot].take_out_anim_name)
-	currently_holding = inventory[hover_on_slot]
+		anim_manager.play(hotbar[hover_on_slot].take_out_anim_name)
+	currently_holding = hotbar[hover_on_slot]
 		
 
 func handle_changing():
@@ -355,9 +371,9 @@ func handle_changing():
 		if currently_holding != null:
 			currently_holding.put_away(self)
 			currently_holding = null
-		if inventory[hover_on_slot] != null:
+		if hotbar[hover_on_slot] != null:
 			print("taking out")
-			currently_holding = inventory[hover_on_slot]
+			currently_holding = hotbar[hover_on_slot]
 			hud.change_inv_hb_text(currently_holding.hover_name)
 			currently_holding.take_out(self)
 		else:
@@ -389,30 +405,30 @@ func handle_hotbar():
 			
 	if prev_hover_on_slot != hover_on_slot:
 		print("Switched to: {0}".format([hover_on_slot]))
-		if inventory[prev_hover_on_slot] == null and inventory[hover_on_slot] == null:
+		if hotbar[prev_hover_on_slot] == null and hotbar[hover_on_slot] == null:
 			changing_held_item = false
-	if Input.is_action_pressed(left_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
-		inventory[hover_on_slot].use(self)
-	if Input.is_action_pressed(right_click_use) and inventory[hover_on_slot] != null and changing_held_item != true:
-		inventory[hover_on_slot].secondary_use(self)
+	if Input.is_action_pressed(left_click_use) and hotbar[hover_on_slot] != null and changing_held_item != true:
+		hotbar[hover_on_slot].use(self)
+	if Input.is_action_pressed(right_click_use) and hotbar[hover_on_slot] != null and changing_held_item != true:
+		hotbar[hover_on_slot].secondary_use(self)
 	handle_changing()
 
 func refresh_holding():
-	if currently_holding == null and inventory[hover_on_slot] != null:
-		currently_holding = inventory[hover_on_slot]
+	if currently_holding == null and hotbar[hover_on_slot] != null:
+		currently_holding = hotbar[hover_on_slot]
 		currently_holding.take_out(self)
-	elif currently_holding != null and inventory[hover_on_slot] == null:
+	elif currently_holding != null and hotbar[hover_on_slot] == null:
 		currently_holding = null
 		hud.change_inv_hb_text("")
 		hud.add_item_slot_texture(-13,hover_on_slot)
 
 func refresh_holding_2():
 	#This happens when we pick something up
-	if currently_holding == null and inventory[hover_on_slot] != null:
+	if currently_holding == null and hotbar[hover_on_slot] != null:
 		handle_changing_2()
 		hud.change_inv_hb_text(currently_holding.hover_name)
 	#This happens when we drop something
-	elif currently_holding != null and inventory[hover_on_slot] == null: 
+	elif currently_holding != null and hotbar[hover_on_slot] == null: 
 		currently_holding = null
 		hud.change_inv_hb_text("")
 		hud.remove_item_sprite_from_hotbar(hover_on_slot)
@@ -432,9 +448,9 @@ func draw_debug():
 func  _physics_process(delta):
 	check_statuses()
 	update_stats()
+	handle_all_states(delta)
+	handle_movement(delta)
 	if is_alive and !is_drowning:
-		handle_all_states(delta)
-		handle_movement(delta)
 		handle_rolling(delta)
 		handle_hotbar_2()
 		misc_actions()
@@ -447,19 +463,19 @@ func _ready():
 	char_cam.make_current()
 	current_health = initial_max_health
 	current_air_supply = base_air_supply
-
+	signal_manager.connect("update_hotbar", update_hotbar)
 	signal_manager.connect("region_entered", region_update)
 	signal_manager.connect("region_exited", left_region)
 
 	#Set slots in array to items
-	inventory[0] = starting_item_slot_0
-	inventory[1] = starting_item_slot_1
-	inventory[2] = starting_item_slot_2
-	inventory[3] = starting_item_slot_3
-	inventory[4] = starting_item_slot_4
-	inventory[5] = starting_item_slot_5
-	inventory[6] = starting_item_slot_6
-	currently_holding = inventory[0]
+	hotbar[0] = starting_item_slot_0
+	hotbar[1] = starting_item_slot_1
+	hotbar[2] = starting_item_slot_2
+	hotbar[3] = starting_item_slot_3
+	hotbar[4] = starting_item_slot_4
+	hotbar[5] = starting_item_slot_5
+	hotbar[6] = starting_item_slot_6
+	currently_holding = hotbar[0]
 	hud.highlight_hover_slot(0,0)
 
 	print_debug("Player Ready")
@@ -487,15 +503,15 @@ func get_swimming_vel():
 	#Coordinate movement is based on mouse position, rather than standard horizontal locked movement
 
 	#var swim_movement = Input.get_vector("left", "right", "forwards", "backwards")
-		
-	if Input.is_action_pressed(move_forward):
-		swim_vec += -char_cam.global_transform.basis.z
-	if Input.is_action_pressed(move_backward):
-		swim_vec += char_cam.global_transform.basis.z
-	if Input.is_action_pressed(move_left) and !Input.is_action_pressed("maneuver"):
-		swim_vec += -char_cam.global_transform.basis.x
-	if Input.is_action_pressed(move_right) and !Input.is_action_pressed("maneuver"):
-		swim_vec += char_cam.global_transform.basis.x
+	if is_alive:
+		if Input.is_action_pressed(move_forward):
+			swim_vec += -char_cam.global_transform.basis.z
+		if Input.is_action_pressed(move_backward):
+			swim_vec += char_cam.global_transform.basis.z
+		if Input.is_action_pressed(move_left) and !Input.is_action_pressed("maneuver"):
+			swim_vec += -char_cam.global_transform.basis.x
+		if Input.is_action_pressed(move_right) and !Input.is_action_pressed("maneuver"):
+			swim_vec += char_cam.global_transform.basis.x
 	
 	# -----------------------------------------------------------------------------------------------------
 	#if Input.is_action_just_pressed("jump") && can_boost:
@@ -595,7 +611,20 @@ func update_stats():
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("ui_cancel"):
-		get_tree().quit()
+		is_paused = !is_paused
+		
+		if is_paused:
+			signal_manager.emit_signal("pause")
+		else:
+			signal_manager.emit_signal("unpause")
+		update_mouse_mode()
+	
+	if event.is_action_pressed("inv"):
+		if not is_paused and in_control:
+			inv_open = !inv_open
+			hud.toggle_inv()
+			update_mouse_mode()
+		
 
 func draw_air(amount: float, modifier: float):
 	if current_air_supply <= 0.0:
@@ -607,6 +636,7 @@ func draw_air(amount: float, modifier: float):
 	if current_air_supply <= 0.0:
 		current_air_supply = 0.0
 	return
+
 func add_air(amount: float):
 	current_air_supply += amount
 	if current_air_supply > base_air_supply:
@@ -635,14 +665,17 @@ func deal_damage(damage:float):
 	current_health -= damage
 	print(damage)
 	print(current_health)
-	if current_health <= 0:
-		die()
-		return
-
 	if is_submerged and damage >= min_tumble_impact:
 		start_tumble(damage, damage) # Later we'll change the second parameter to be the physical force of a collision
 	elif damage >= min_flinch_damage:
 		start_flinch(damage)
+	if current_health <= 0:
+		die()
+		return
+		
+func apply_knockback(dir: Vector3, force: float):
+	velocity += dir * force
+	
 	
 # ---------------------------------------------------------------------------
 # State handling functions

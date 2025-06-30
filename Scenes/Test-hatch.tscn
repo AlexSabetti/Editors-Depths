@@ -82,8 +82,8 @@ tracks/3/keys = PackedFloat32Array(0, 1, 0, 0, -0.4)
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7kapb"]
 _data = {
-&"activate_door": SubResource("Animation_roejy"),
-&"RESET": SubResource("Animation_githf")
+&"RESET": SubResource("Animation_githf"),
+&"activate_door": SubResource("Animation_roejy")
 }
 
 [node name="Node3D" type="StaticBody3D"]

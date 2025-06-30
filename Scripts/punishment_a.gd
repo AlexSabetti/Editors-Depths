@@ -1,0 +1,1 @@
+# To be developed, this is just a placeholder for the entity that punishes the loading of a savestate. Note that at the time of writing this entities, enemies, pathing, saving, hell even proper file management has not been added.

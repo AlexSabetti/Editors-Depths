@@ -10,3 +10,8 @@ signal unload_region(non_native_nodes:Array, scene_name:String, region_title:Str
 #signal trigger_enter_portal(entered_portal:Portal)
 signal teleporter_used(set_id:int, unique_portal_id:int, interactor:CharacterBody3D)
 
+signal pause()
+signal unpause()
+
+signal selected_item(slot_index: int)
+signal update_hotbar(slot_index: int)

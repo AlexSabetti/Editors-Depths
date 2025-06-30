@@ -32,11 +32,11 @@ func _process(_delta):
 		elif body_volume is PocketZone:
 			body.surrounded_by = body_volume
 			if body_volume.is_gas:
-				print("Gas detected")
+				#print("Gas detected")
 				body.in_liquid = false
 				pocket_zone_override = true
 			else:
-				print("Liquid detected")
+				#print("Liquid detected")
 				body.in_liquid = true
 				pocket_zone_override = false
 		else:
@@ -44,7 +44,7 @@ func _process(_delta):
 			pocket_zone_override = false
 			body.surrounded_by = null
 		counter += 1;
-	print(counter, " bodies detected in depth check")
+	#print(counter, " bodies detected in depth check")
 	if pocket_zone_override:
 		depth = to_local(depth_detector.get_collision_point()).y
 		if !depth_detector.is_colliding():
