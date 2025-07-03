@@ -8,7 +8,7 @@ var what_am_i_looking_at: Label
 
 func _ready():
 	proper_owner = get_parent().get_parent().get_parent() #Ideally our result should be the Player Character
-	what_am_i_looking_at = proper_owner.get_node("Pivot/Eyes/HUD/MC/Center/Prompt")
+	what_am_i_looking_at = proper_owner.get_node("Pivot/Eyes/HUD/Center/Prompt")
 
 @warning_ignore("unused_parameter")
 func _physics_process(delta):

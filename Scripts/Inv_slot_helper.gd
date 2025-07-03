@@ -9,6 +9,13 @@ func _ready():
 	#connect("gui_input", selected_slot)
 	print("Inv_slot_helper ready with slot index: ", slot_index)
 
+func _pressed():
+	print("Pressed slot: ", slot_index)
+	if slot_index == -1:
+		print("Slot index is not set, cannot select item.")
+		return
+	signal_manager.emit_signal("selected_item", slot_index)
+	
 func _gui_input(event):
 	print(event)
 	selected_slot(event)

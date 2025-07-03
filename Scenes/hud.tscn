@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c2ny57gobyk3t"]
+[gd_scene load_steps=9 format=3 uid="uid://c2ny57gobyk3t"]
 
 [ext_resource type="Script" path="res://Scripts/HUDController.gd" id="1_q15wx"]
 [ext_resource type="LabelSettings" uid="uid://c0jstdr536nwx" path="res://Various_Settings/Jersey15LabelFontSettings.tres" id="1_xdvex"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cowxd8grqmkjv" path="res://Materials/UnderlayCorBar.png" id="3_q8ame"]
 [ext_resource type="Texture2D" uid="uid://dfauqlgkfpept" path="res://Materials/OverlayCorBar.png" id="4_ac5ne"]
 [ext_resource type="Script" path="res://Scripts/Inv_slot_helper.gd" id="4_q6b33"]
+[ext_resource type="Texture2D" uid="uid://bedqrhnihatkq" path="res://Materials/HotbarSlotAttempt1.png" id="8_7iim1"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -15,465 +16,106 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
+mouse_filter = 1
 script = ExtResource("1_q15wx")
 
-[node name="MC" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
+[node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 2
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 6
-
-[node name="Main" type="VBoxContainer" parent="MC"]
-layout_mode = 2
-mouse_filter = 0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = -6.0
 mouse_default_cursor_shape = 2
 
-[node name="Top" type="VBoxContainer" parent="MC/Main"]
+[node name="Top" type="VBoxContainer" parent="Main"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="InfoBox" type="VBoxContainer" parent="MC/Main/Top"]
+[node name="InfoBox" type="VBoxContainer" parent="Main/Top"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 2
 alignment = 1
 
-[node name="DepthBox" type="HBoxContainer" parent="MC/Main/Top/InfoBox"]
+[node name="DepthBox" type="HBoxContainer" parent="Main/Top/InfoBox"]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="DepthLabel" type="Label" parent="MC/Main/Top/InfoBox/DepthBox"]
+[node name="DepthLabel" type="Label" parent="Main/Top/InfoBox/DepthBox"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "[ Depth: "
 label_settings = ExtResource("1_xdvex")
 
-[node name="Depth" type="Label" parent="MC/Main/Top/InfoBox/DepthBox"]
+[node name="Depth" type="Label" parent="Main/Top/InfoBox/DepthBox"]
 layout_mode = 2
 text = "Not Available"
 label_settings = ExtResource("1_xdvex")
 
-[node name="CoordBox" type="HBoxContainer" parent="MC/Main/Top/InfoBox"]
+[node name="CoordBox" type="HBoxContainer" parent="Main/Top/InfoBox"]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="CoordLabel" type="Label" parent="MC/Main/Top/InfoBox/CoordBox"]
+[node name="CoordLabel" type="Label" parent="Main/Top/InfoBox/CoordBox"]
 layout_mode = 2
 text = "[ X, Z: "
 label_settings = ExtResource("1_xdvex")
 
-[node name="XCoords" type="Label" parent="MC/Main/Top/InfoBox/CoordBox"]
+[node name="XCoords" type="Label" parent="Main/Top/InfoBox/CoordBox"]
 layout_mode = 2
 text = "xbounds"
 label_settings = ExtResource("1_xdvex")
 
-[node name="ZCoords" type="Label" parent="MC/Main/Top/InfoBox/CoordBox"]
+[node name="ZCoords" type="Label" parent="Main/Top/InfoBox/CoordBox"]
 layout_mode = 2
 text = "zbounds"
 label_settings = ExtResource("1_xdvex")
 
-[node name="HRegionBox" type="HBoxContainer" parent="MC/Main/Top/InfoBox"]
+[node name="HRegionBox" type="HBoxContainer" parent="Main/Top/InfoBox"]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="HRegionLabel" type="Label" parent="MC/Main/Top/InfoBox/HRegionBox"]
+[node name="HRegionLabel" type="Label" parent="Main/Top/InfoBox/HRegionBox"]
 layout_mode = 2
 text = "[ H-Region: "
 label_settings = ExtResource("1_xdvex")
 
-[node name="HRegion" type="Label" parent="MC/Main/Top/InfoBox/HRegionBox"]
+[node name="HRegion" type="Label" parent="Main/Top/InfoBox/HRegionBox"]
 layout_mode = 2
 text = "Standard"
 label_settings = ExtResource("1_xdvex")
 
-[node name="VRegionBox" type="HBoxContainer" parent="MC/Main/Top/InfoBox"]
+[node name="VRegionBox" type="HBoxContainer" parent="Main/Top/InfoBox"]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="VRegionLabel" type="Label" parent="MC/Main/Top/InfoBox/VRegionBox"]
+[node name="VRegionLabel" type="Label" parent="Main/Top/InfoBox/VRegionBox"]
 layout_mode = 2
 text = "[ V-Region: "
 label_settings = ExtResource("1_xdvex")
 
-[node name="VRegion" type="Label" parent="MC/Main/Top/InfoBox/VRegionBox"]
+[node name="VRegion" type="Label" parent="Main/Top/InfoBox/VRegionBox"]
 layout_mode = 2
 text = "Standard"
 label_settings = ExtResource("1_xdvex")
 
-[node name="InvHoverText" type="Label" parent="MC/Main/Top"]
+[node name="InvHoverText" type="Label" parent="Main/Top"]
 z_index = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 10
 
-[node name="Middle" type="MarginContainer" parent="MC/Main"]
-layout_mode = 2
-size_flags_vertical = 3
-mouse_default_cursor_shape = 2
-theme_override_constants/margin_left = 160
-theme_override_constants/margin_top = 180
-theme_override_constants/margin_right = 160
-theme_override_constants/margin_bottom = 8
-
-[node name="Panel" type="Panel" parent="MC/Main/Middle"]
-modulate = Color(0.372549, 0.301961, 0.639216, 0.384314)
-layout_mode = 2
-mouse_default_cursor_shape = 2
-
-[node name="GridContainer" type="GridContainer" parent="MC/Main/Middle/Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.01
-anchor_top = 0.02
-anchor_right = 0.99
-anchor_bottom = 0.98
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
-columns = 9
-
-[node name="Slot1" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
+[node name="Bottom" type="HBoxContainer" parent="Main"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_default_cursor_shape = 2
-script = ExtResource("4_q6b33")
-slot_index = 7
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot1"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.963
-anchor_bottom = 0.963
-offset_left = 1.0
-offset_top = 1.0
-offset_right = -0.00300598
-offset_bottom = -0.00300598
-
-[node name="Slot2" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 8
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot2"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot3" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 9
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot3"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot4" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 10
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot4"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot5" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 11
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot5"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot6" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 12
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot6"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot7" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 13
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot7"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot8" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 14
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot8"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot9" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 15
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot9"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot10" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 16
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot10"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot11" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 17
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot11"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot12" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 18
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot12"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot13" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 19
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot13"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot14" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 20
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot14"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot15" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 21
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot15"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot16" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 22
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot16"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot17" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 23
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot17"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot18" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 24
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot18"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot19" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 25
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot19"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot20" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 26
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot20"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot21" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 27
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot21"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot22" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 28
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot22"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot23" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 29
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot23"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot24" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 30
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot24"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot25" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 31
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot25"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot26" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 32
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot26"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Slot27" type="Button" parent="MC/Main/Middle/Panel/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("4_q6b33")
-slot_index = 33
-
-[node name="TextureRect" type="TextureRect" parent="MC/Main/Middle/Panel/GridContainer/Slot27"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 79.0
-
-[node name="Bottom" type="HBoxContainer" parent="MC/Main"]
-layout_mode = 2
-size_flags_horizontal = 3
+size_flags_vertical = 10
 size_flags_stretch_ratio = 0.15
+mouse_filter = 2
 
-[node name="StatusBarBox" type="MarginContainer" parent="MC/Main/Bottom"]
+[node name="StatusBarBox" type="MarginContainer" parent="Main/Bottom"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.35
@@ -482,12 +124,12 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 10
 
-[node name="Vb" type="VBoxContainer" parent="MC/Main/Bottom/StatusBarBox"]
+[node name="Vb" type="VBoxContainer" parent="Main/Bottom/StatusBarBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="CorruptionBar" type="TextureProgressBar" parent="MC/Main/Bottom/StatusBarBox/Vb"]
+[node name="CorruptionBar" type="TextureProgressBar" parent="Main/Bottom/StatusBarBox/Vb"]
 visible = false
 custom_minimum_size = Vector2(200, 14)
 layout_mode = 2
@@ -499,7 +141,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("3_q8ame")
 texture_progress = ExtResource("4_ac5ne")
 
-[node name="AirBar" type="TextureProgressBar" parent="MC/Main/Bottom/StatusBarBox/Vb"]
+[node name="AirBar" type="TextureProgressBar" parent="Main/Bottom/StatusBarBox/Vb"]
 texture_filter = 3
 texture_repeat = 1
 custom_minimum_size = Vector2(200, 14)
@@ -513,7 +155,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("3_d2knx")
 texture_progress = ExtResource("3_akhg7")
 
-[node name="MarginContainer" type="MarginContainer" parent="MC/Main/Bottom"]
+[node name="MarginContainer" type="MarginContainer" parent="Main/Bottom"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.27
@@ -522,11 +164,12 @@ theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="Panel" type="Panel" parent="MC/Main/Bottom/MarginContainer"]
+[node name="Panel" type="Panel" parent="Main/Bottom/MarginContainer"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
+mouse_filter = 1
 
-[node name="HotbarBox" type="GridContainer" parent="MC/Main/Bottom/MarginContainer/Panel"]
+[node name="HotbarBox" type="GridContainer" parent="Main/Bottom/MarginContainer/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -535,14 +178,23 @@ grow_horizontal = 2
 grow_vertical = 2
 columns = 7
 
-[node name="Slot0" type="Button" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox"]
+[node name="Slot0" type="Button" parent="Main/Bottom/MarginContainer/Panel/HotbarBox"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_q6b33")
 slot_index = 0
 
-[node name="Item" type="TextureRect" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox/Slot0"]
+[node name="Border" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot0"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("8_7iim1")
+expand_mode = 4
+
+[node name="Item" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot0"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -552,15 +204,25 @@ anchor_bottom = 0.95
 offset_right = 2.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="Slot1" type="Button" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox"]
+[node name="Slot1" type="Button" parent="Main/Bottom/MarginContainer/Panel/HotbarBox"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_q6b33")
 slot_index = 1
 
-[node name="Item" type="TextureRect" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox/Slot1"]
+[node name="Border" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot1"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("8_7iim1")
+expand_mode = 4
+
+[node name="Item" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot1"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -569,15 +231,25 @@ anchor_right = 0.95
 anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="Slot2" type="Button" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox"]
+[node name="Slot2" type="Button" parent="Main/Bottom/MarginContainer/Panel/HotbarBox"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_q6b33")
 slot_index = 2
 
-[node name="Item" type="TextureRect" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox/Slot2"]
+[node name="Border" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot2"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("8_7iim1")
+expand_mode = 4
+
+[node name="Item" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot2"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -586,15 +258,25 @@ anchor_right = 0.95
 anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="Slot3" type="Button" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox"]
+[node name="Slot3" type="Button" parent="Main/Bottom/MarginContainer/Panel/HotbarBox"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_q6b33")
 slot_index = 3
 
-[node name="Item" type="TextureRect" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox/Slot3"]
+[node name="Border" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot3"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("8_7iim1")
+expand_mode = 4
+
+[node name="Item" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot3"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -603,15 +285,25 @@ anchor_right = 0.95
 anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="Slot4" type="Button" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox"]
+[node name="Slot4" type="Button" parent="Main/Bottom/MarginContainer/Panel/HotbarBox"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_q6b33")
 slot_index = 4
 
-[node name="Item" type="TextureRect" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox/Slot4"]
+[node name="Border" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot4"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("8_7iim1")
+expand_mode = 4
+
+[node name="Item" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot4"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -620,15 +312,25 @@ anchor_right = 0.95
 anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="Slot5" type="Button" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox"]
+[node name="Slot5" type="Button" parent="Main/Bottom/MarginContainer/Panel/HotbarBox"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_q6b33")
 slot_index = 5
 
-[node name="Item" type="TextureRect" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox/Slot5"]
+[node name="Border" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot5"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("8_7iim1")
+expand_mode = 4
+
+[node name="Item" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot5"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -637,15 +339,25 @@ anchor_right = 0.95
 anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="Slot6" type="Button" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox"]
+[node name="Slot6" type="Button" parent="Main/Bottom/MarginContainer/Panel/HotbarBox"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_q6b33")
 slot_index = 6
 
-[node name="Item" type="TextureRect" parent="MC/Main/Bottom/MarginContainer/Panel/HotbarBox/Slot6"]
+[node name="Border" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot6"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("8_7iim1")
+expand_mode = 2
+
+[node name="Item" type="TextureRect" parent="Main/Bottom/MarginContainer/Panel/HotbarBox/Slot6"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -655,19 +367,472 @@ anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="StatusWarningBox" type="GridContainer" parent="MC/Main/Bottom"]
+[node name="StatusWarningBox" type="GridContainer" parent="Main/Bottom"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.35
 
-[node name="Center" type="VBoxContainer" parent="MC"]
+[node name="Center" type="VBoxContainer" parent="."]
 layout_mode = 2
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 1146.0
+offset_bottom = 642.0
 alignment = 1
 
-[node name="Prompt" type="Label" parent="MC/Center"]
+[node name="Prompt" type="Label" parent="Center"]
 z_index = 2
 layout_mode = 2
 size_flags_horizontal = 4
-mouse_filter = 1
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Inv2" type="Panel" parent="."]
+visible = false
+self_modulate = Color(1, 1, 1, 0.403922)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 168.0
+offset_top = 299.0
+offset_right = -166.0
+offset_bottom = -62.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="Inv2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 9
+
+[node name="Slot1" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+script = ExtResource("4_q6b33")
+slot_index = 7
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot2" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("4_q6b33")
+slot_index = 8
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot3" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("4_q6b33")
+slot_index = 9
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot4" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("4_q6b33")
+slot_index = 10
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot5" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("4_q6b33")
+slot_index = 11
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot5"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot6" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("4_q6b33")
+slot_index = 12
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot6"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot7" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 13
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot7"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot8" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 14
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot8"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot9" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 15
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot9"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot10" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 16
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot10"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot11" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 17
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot11"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot12" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 18
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot12"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot13" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 19
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot13"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot14" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 20
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot14"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot15" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 21
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot15"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot16" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 22
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot16"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot17" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 23
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot17"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot18" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 24
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot18"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot19" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 25
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot19"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot20" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 26
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot20"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot21" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 27
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot21"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot22" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 28
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot22"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot23" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 29
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot23"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot24" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 30
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot24"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot25" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 31
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot25"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot26" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 32
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot26"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot27" type="Button" parent="Inv2/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("4_q6b33")
+slot_index = 33
+
+[node name="TextureRect" type="TextureRect" parent="Inv2/GridContainer/Slot27"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

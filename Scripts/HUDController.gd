@@ -1,24 +1,24 @@
 class_name HUDController
 extends Control
 
-@onready var info_box:VBoxContainer = get_node("MC/Main/Top/InfoBox")
-@onready var depth_stats:Label = get_node("MC/Main/Top/InfoBox/DepthBox/Depth")
-@onready var x_coord_stats:Label = get_node("MC/Main/Top/InfoBox/CoordBox/XCoords")
-@onready var z_coord_stats:Label = get_node("MC/Main/Top/InfoBox/CoordBox/ZCoords")
-@onready var h_region_title:Label = get_node("MC/Main/Top/InfoBox/HRegionBox/HRegion")
-@onready var v_region_title:Label = get_node("MC/Main/Top/InfoBox/VRegionBox/VRegion")
+@onready var info_box:VBoxContainer = get_node("Main/Top/InfoBox")
+@onready var depth_stats:Label = get_node("Main/Top/InfoBox/DepthBox/Depth")
+@onready var x_coord_stats:Label = get_node("Main/Top/InfoBox/CoordBox/XCoords")
+@onready var z_coord_stats:Label = get_node("Main/Top/InfoBox/CoordBox/ZCoords")
+@onready var h_region_title:Label = get_node("Main/Top/InfoBox/HRegionBox/HRegion")
+@onready var v_region_title:Label = get_node("Main/Top/InfoBox/VRegionBox/VRegion")
 
 # Bars
-@onready var air_bar:TextureProgressBar = get_node("MC/Main/Bottom/StatusBarBox/Vb/AirBar")
-@onready var cor_bar:TextureProgressBar = get_node("MC/Main/Bottom/StatusBarBox/Vb/CorruptionBar")
+@onready var air_bar:TextureProgressBar = get_node("Main/Bottom/StatusBarBox/Vb/AirBar")
+@onready var cor_bar:TextureProgressBar = get_node("Main/Bottom/StatusBarBox/Vb/CorruptionBar")
 # Hotbar container
-@onready var hotbar_box:GridContainer = get_node("MC/Main/Bottom/HotbarBox")
+@onready var hotbar_box:GridContainer = get_node("Main/Bottom/MarginContainer/Panel/HotbarBox")
 # Text that shows up when an item is selected in the hotbar
-@onready var inv_select_text:Label = get_node("MC/Main/Top/InvHoverText")
+@onready var inv_select_text:Label = get_node("Main/Top/InvHoverText")
 @export_group("Delay Settings")
 @export var lag_coord_delay: float = 2
 
-@onready var inv_box:Panel = get_node("MC/Main/Middle/Panel")
+@onready var inv_box:Panel = get_node("Inv2")
 var is_paused: bool = false
 
 @onready var signal_manager = VoidScreamers
@@ -50,8 +50,8 @@ func show_depth():
 	depth_box.visible = !visible
 
 func highlight_hover_slot(slot_prior:int, slot_now:int):
-	hotbar_box.get_child(slot_prior).texture = standard_hotbar_box
-	hotbar_box.get_child(slot_now).texture = highlighted_hotbar_box
+	hotbar_box.get_child(slot_prior).get_node("Border").texture = standard_hotbar_box
+	hotbar_box.get_child(slot_now).get_node("Border").texture = highlighted_hotbar_box
 
 func change_inv_hb_text(new_text:String):
 	inv_select_text.text = new_text
@@ -96,8 +96,8 @@ func respond_to_pause():
 	info_box.hide()
 	if inv_box.visible:
 		inv_box.hide()
-		inv_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		hotbar_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# inv_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# hotbar_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 func respond_to_unpause():
 	is_paused = false
@@ -107,13 +107,13 @@ func toggle_inv():
 	if !inv_box.visible:
 		print("Showing inventory box")
 		inv_box.show()
-		inv_box.mouse_filter = Control.MOUSE_FILTER_STOP
-		hotbar_box.mouse_filter = Control.MOUSE_FILTER_STOP
+		# inv_box.mouse_filter = Control.MOUSE_FILTER_PASS
+		# hotbar_box.mouse_filter = Control.MOUSE_FILTER_PASS
 	else:
 		print("Hiding inventory box")
 		inv_box.hide()
-		inv_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		hotbar_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# inv_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# hotbar_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func selected_inv_slot(slot: int):
 	if slot > hotbar_box.get_child_count() - 1:
